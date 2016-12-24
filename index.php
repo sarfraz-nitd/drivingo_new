@@ -14,11 +14,11 @@
                 $('.carousel.carousel-slider').carousel({full_width: true});
                 setInterval(slideImage, 3000);
                 
-                var screenHeight = screen.height;
+                var screenHeight = window.innerHeight;
                 if(screenHeight < 768){
                     $('#main-carousel').attr("style","height:"+screenHeight+"px;");
                 } else {
-                    $('#main-carousel').attr("style","height:"+(screenHeight-screenHeight*0.1262)+"px;");
+                    $('#main-carousel').attr("style","height:"+(screenHeight)+"px;");
                 }
                 
                 $('.mobile-nav-bar').hide();
@@ -72,7 +72,7 @@
             }
             
             .carousel-item-four{
-                background: #616161 url("img/school.jpg") no-repeat top;
+                background: #616161 url("img/School.jpg") no-repeat top;
                 background-size: cover;
             }
             
