@@ -11,10 +11,19 @@
             $(document).ready(function(){
                 $('.scrollspy').scrollSpy();
                 $('.mobile-nav-bar').hide();
+                $('#image-header').hide();
             });
             
             function mobileNavBar(){
                 $('.mobile-nav-bar').slideToggle('slow');
+            }
+            
+            function showName(id){
+                $(id).show('slow');
+            }
+            
+            function hideName(id){
+                $(id).hide('fast');
             }
         </script>
         
@@ -28,7 +37,7 @@
             
             .fixed-side-nav{
                 position: fixed;
-                height: 610px;
+                height: 79%;
                 width: 300px;
                 left: 5%;
                 background: white;
@@ -38,9 +47,8 @@
             
             .main-section{
                 position: absolute;
-                height: 180em;
-                width: 66%;
-                left: 28%;
+                width: 71%;
+                left: 24%;
                 background: white;
                 top: 15%;
                 box-shadow: 0px 6px 50px 0px rgba(26,20,26,1);
@@ -256,14 +264,51 @@
                 background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
                 background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
                 position: relative;
-                top: 191em;
+                top: 238em;
+            }
+            
+            .item-img {
+              position: relative;
+              overflow: hidden;
+              width: 100%;
+            }
+            .item-img img {
+              max-width: 100%;
+
+              -moz-transition: all 0.3s;
+              -webkit-transition: all 0.3s;
+              transition: all 0.3s;
+            }
+            .item-img:hover img {
+              -moz-transform: scale(1.1);
+              -webkit-transform: scale(1.1);
+              transform: scale(1.1);
+              opacity: .8;
+            }
+            
+            .image-header{
+                position: absolute;
+                top: 4em;
+                left: 21%;
+                font-size: 4em;
+                font-weight: 200;
+                color: darkgrey;
+                border: 2px solid white;
+                width: 56%;
+                background: white;
+                opacity: 1;
+                box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+            }
+            
+            .image-header p{
+                padding-left: 1em;
+                padding-right: 1em;
             }
             
             @media screen and (max-width: 768px){
                 
                 .main-section{
                     position: absolute;
-                    height: 281em;
                     width: 90%;
                     left: 5%;
                     background: white;
@@ -318,7 +363,7 @@
                     background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
                     background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
                     position: relative;
-                    top: 288em;
+                    top: 300em;
                 }
                 
                 .comment-section {
@@ -343,6 +388,87 @@
                     width: 285px;
                     left: -23px;
                 }
+                
+                .image-header {
+                    position: absolute;
+                    top: 1.4em;
+                    left: 14%;
+                    font-size: 1.5em;
+                    font-weight: 300;
+                    color: grey;
+                    border: 2px solid white;
+                    width: 72%;
+                    background: white;
+                    opacity: 1;
+                    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+                }
+            }
+            
+            @media screen and (min-width: 768px) and (max-width: 900px){
+                .fixed-side-nav {
+                    position: fixed;
+                    height: 79%;
+                    width: 30%;
+                    left: 2%;
+                    background: white;
+                    top: 15%;
+                    box-shadow: 0px 6px 50px 0px rgba(26,20,26,1);
+                    max-width: 300px;
+                }
+                
+                .main-section {
+                    position: absolute;
+                    width: 64%;
+                    left: 34%;
+                    background: white;
+                    top: 15%;
+                    box-shadow: 0px 6px 50px 0px rgba(26,20,26,1);
+                }
+                
+                .feedback {
+                    position: fixed;
+                    width: 16em;
+                    bottom: 3em;
+                }
+                
+                footer {
+                    background: #000000;
+                    background: -webkit-linear-gradient(to left, #000000 , #434343);
+                    background: linear-gradient(to left, #000000 , #434343);
+                    position: relative;
+                    top: 221em;
+                }
+                
+                .price .header {
+                    background-color: #111;
+                    color: white;
+                    font-size: 20px;
+                }
+                
+                .price .grey {
+                    background-color: #eee;
+                    font-size: 14px;
+                }
+                
+                .columns {
+                    float: left;
+                    width: 33.3%;
+                    padding: 3px;
+                }
+                
+                .image-header {
+                    position: absolute;
+                    top: 4em;
+                    left: 18%;
+                    font-size: 2em;
+                    font-weight: 300;
+                    color: darkgrey;
+                    border: 2px solid white;
+                    width: 63%;
+                    background: white;
+                    opacity: 1;
+                    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+                }
             }
         </style>
     </head>
@@ -351,7 +477,7 @@
         <!-- Navigation
         ================================================== -->
 
-        <nav class="navigation-bar gradient">
+        <nav class="navigation-bar gradient" onmouseover="hideName('#image-header');">
             <a href="./index.php" class="brand-logo logo1 left"><img style="height: 40px;" src="img/logo1.png" /></a>
             <span class="menu-icon" id="menu-icon" onclick="mobileNavBar();"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></span>
             <div class="nav-wrapper">
@@ -370,7 +496,7 @@
             </div>
         </nav>
         
-        <section class="fixed-side-nav hide-on-small-only">        
+        <section class="fixed-side-nav hide-on-small-only" onmouseover="hideName('#image-header');">        
           <div class="row">
             <div class="col hide-on-small-only m3 l2">
               <ul class="section table-of-contents">
@@ -392,7 +518,11 @@
         
         <section class="main-section">
             <div class="row">
-                <div class="col s12 m9 l12">
+                <div class="s12 m9 item-img" onmouseover="showName('#image-header');">
+                    <img src="img/School.jpg" style="width: 100%;"/>
+                    <div class="image-header"  id="image-header"><p>Ronnie's Driving School</p></div>
+                </div>
+                <div class="col s12 mm9 l12" onmouseover="hideName('#image-header');">
                   <div id="introduction" class="section scrollspy move-right">
                     <h2 class="scrollspy-header">About Ronnie's Driving School</h2>
                     <p>Road safety is a key concern area for both the Government and the people on Indian roads. Safe driving today requires a higher level of confidence and competence, given the poor traffic planning, increasing number of vehicles, lack of professionalism in driving and untrained drivers on road. In a bid to address these issues, Maruti Suzuki India Ltd. has launched Maruti Driving School — its initiative for promoting safe driving.
