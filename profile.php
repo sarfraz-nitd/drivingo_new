@@ -405,7 +405,7 @@
                 }
             }
             
-            @media screen and (min-width: 768px) and (max-width: 900px){
+            @media screen and (min-width: 768px) and (max-width: 990px){
                 .fixed-side-nav {
                     position: fixed;
                     height: 79%;
@@ -469,6 +469,37 @@
                     background: white;
                     opacity: 1;
                     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+                }
+                
+                .menu-icon{
+                    display: block;
+                    position: relative;
+                    left: 93%;
+                    top: 8px;
+                }
+
+                .menu-icon:hover{
+                    cursor: pointer;
+                }
+
+                .mobile-nav-bar{
+                    display: block;
+                    z-index: 2;
+                    position: fixed;
+                    top: 55px;
+                    width: 100%;
+                    color: white;
+                    height: 100px;
+                }
+
+                .mobile-nav-bar-options{
+                    color: white;
+                    font-weight: 400;
+                }
+
+                .mobile-nav-bar-options:hover{
+                    color: white;
+                    font-weight: 200;
                 }
             }
         </style>
