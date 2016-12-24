@@ -15,11 +15,8 @@
                 setInterval(slideImage, 3000);
                 
                 var screenHeight = window.innerHeight;
-                if(screenHeight < 768){
-                    $('#main-carousel').attr("style","height:"+screenHeight+"px;");
-                } else {
-                    $('#main-carousel').attr("style","height:"+(screenHeight)+"px;");
-                }
+                $('#main-carousel').attr("style","height:"+screenHeight+"px;");
+                
                 
                 $('.mobile-nav-bar').hide();
                 $('#driving-school').hide();
