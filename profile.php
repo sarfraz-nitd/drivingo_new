@@ -48,7 +48,7 @@
             .main-section{
                 position: absolute;
                 width: 71%;
-                left: 24%;
+                left: 27%;
                 background: white;
                 top: 15%;
                 box-shadow: 0px 6px 50px 0px rgba(26,20,26,1);
@@ -205,6 +205,7 @@
             
             .scrollspy-header{
                 font-weight: 100;
+                color: grey;
             }
             
             .move-right{
@@ -264,7 +265,7 @@
                 background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
                 background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
                 position: relative;
-                top: 238em;
+                top: 228em;
             }
             
             .item-img {
