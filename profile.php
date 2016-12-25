@@ -265,7 +265,7 @@
                 background: -webkit-linear-gradient(to left, #000000 , #434343); /* Chrome 10-25, Safari 5.1-6 */
                 background: linear-gradient(to left, #000000 , #434343); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
                 position: relative;
-                top: 228em;
+                top: 238em;
             }
             
             .item-img {
