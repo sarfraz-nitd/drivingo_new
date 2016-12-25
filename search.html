@@ -99,6 +99,65 @@
             -ms-user-select: none;
         }
         
+        [type="radio"]:checked + label:after,
+        [type="radio"].with-gap:checked + label:before,
+        [type="radio"].with-gap:checked + label:after {
+          border: 2px solid #ee6e73;
+        }
+
+        [type="radio"]:checked + label:after,
+        [type="radio"].with-gap:checked + label:after {
+          background-color: #ee6e73;
+          z-index: 0;
+        }
+        
+        [type="checkbox"]:checked + label:before {
+          top: -4px;
+          left: -5px;
+          width: 12px;
+          height: 22px;
+          border-top: 2px solid transparent;
+          border-left: 2px solid transparent;
+          border-right: 2px solid #ee6e73;
+          border-bottom: 2px solid #ee6e73;
+          -webkit-transform: rotate(40deg);
+                  transform: rotate(40deg);
+          -webkit-backface-visibility: hidden;
+                  backface-visibility: hidden;
+          -webkit-transform-origin: 100% 100%;
+                  transform-origin: 100% 100%;
+        }
+        /* Indeterminate checkbox */
+        [type="checkbox"]:indeterminate + label:before {
+          top: -11px;
+          left: -12px;
+          width: 10px;
+          height: 22px;
+          border-top: none;
+          border-left: none;
+          border-right: 2px solid #ee6e73;
+          border-bottom: none;
+          -webkit-transform: rotate(90deg);
+                  transform: rotate(90deg);
+          -webkit-backface-visibility: hidden;
+                  backface-visibility: hidden;
+          -webkit-transform-origin: 100% 100%;
+                  transform-origin: 100% 100%;
+        }
+        [type="checkbox"].filled-in:checked + label:after {
+          top: 0;
+          width: 20px;
+          height: 20px;
+          border: 2px solid #ee6e73;
+          background-color: #ee6e73;
+          z-index: 0;
+        }
+        [type="checkbox"].filled-in.tabbed:checked:focus + label:after {
+          border-radius: 2px;
+          background-color: #ee6e73;
+          border-color: #ee6e73;
+        }
+        
         .head{
             background: #360033; /* fallback for old browsers */
             background: -webkit-linear-gradient(to left, #360033 , #0b8793); /* Chrome 10-25, Safari 5.1-6 */
@@ -143,16 +202,16 @@
         }
         
         .btn-subscribe{
-            background: #360033; /* fallback for old browsers */
-            background: -webkit-linear-gradient(to left, #360033 , #0b8793); /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to left, #360033 , #0b8793); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: #C04848; /* fallback for old browsers */
+            background: -webkit-linear-gradient(to left, #C04848 , #480048); /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to left, #C04848 , #480048); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
             float: left;
         }
         
         .btn-subscribe:hover{
-            background: #360033; /* fallback for old browsers */
-            background: -webkit-linear-gradient(to left, #360033 , #0b8793); /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #360033 , #0b8793); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: #C04848; /* fallback for old browsers */
+            background: -webkit-linear-gradient(to left, #C04848 , #480048); /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #C04848 , #480048); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         }
         
         .card-reveal-inner{
@@ -267,6 +326,7 @@
                 left: 0%;
                 top: 0;
                 border-radius: 0;
+                box-shadow: none;
             }
             
             .search-bar-header{
