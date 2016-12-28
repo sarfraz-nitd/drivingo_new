@@ -5,10 +5,13 @@
         <link rel="stylesheet" href="materialize/css/materialize.min.css">
         <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJh5axYNsWa63hSjco7pySOpX-IJsZ7SM" type="text/javascript"></script>
         
         <!-- javascript portion -->
         
         <script>
+            
+            var curLat, curLng;
             
             $(document).ready(function (){
                 $('.carousel.carousel-slider').carousel({full_width: true});
@@ -45,6 +48,49 @@
             
             function signInModal(){
                 $('#modal1').openModal('open');
+            }
+            
+            function currentLocation(){
+                // Try HTML5 geolocation.
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(function(position) {
+                    
+                    curLat = position.coords.latitude;
+                    curLng = position.coords.longitude;
+                      
+                    $('#lat').val(curLat);
+                    $('#lng').val(curLng);
+                    $('#submitHiddenForm').click();
+
+                  }, function() {
+                    alert('unable to fetch your location!');
+                  });
+                } else {
+                  // Browser doesn't support Geolocation
+                  alert('your browser does not support geolocation!');
+                }
+            }
+            
+            function getCoordinates(){
+                var geocoder = new google.maps.Geocoder();
+                var address = document.getElementById('address').value;
+                if(address.length){
+                      geocoder.geocode({'address': address}, function(results, status) {
+                      if (status === 'OK') {                      
+                        curLat = results[0].geometry.location.lat();
+                        curLng = results[0].geometry.location.lng();
+                        
+                        $('#lat').val(curLat);
+                        $('#lng').val(curLng);
+                        $('#submitHiddenForm').click();
+                          
+                      } else {
+                        alert('Geocode was not successful for the following reason: ' + status);
+                      }
+                    });
+                } else {
+                    alert('please enter any location!');
+                }
             }
             
         </script>
@@ -400,6 +446,14 @@
         
         <!-- landing page starting section -->
         
+        <div class="hide">
+            <form action="search.php" method="get">
+                <input name="lat" id="lat" value="" type="text"/>
+                <input name="lng" id="lng" value="" type="text"/>
+                <input id="submitHiddenForm" type="submit" value="post" />
+            </form>
+        </div>
+        
         <section>
             <div class="carousel carousel-slider center" id="main-carousel" data-indicators="true">
                 <div class="carousel-item-inner">
@@ -410,11 +464,11 @@
                   <div class="row">
                     <div class="col s1 m3 l4"></div>
                     <div class="input-field col s10 m6 l4">
-                      <input placeholder="Enter any location..." id="first_name" type="text" class="validate">
-                      <span class="location-icon"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                      <input placeholder="Enter any location..." id="address" type="text" class="validate">
+                      <span class="location-icon" onclick="currentLocation()"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
                     </div>  
                   </div>  
-                  <a class="btn waves-effect white grey-text darken-text-2">Search</a>
+                  <a class="btn waves-effect white grey-text darken-text-2" onclick="getCoordinates()">Search</a>
                 </div>
                 <div class="carousel-item carousel-item-one white-text" href="#one!"></div>
                 <div class="carousel-item carousel-item-two white-text" href="#two!"></div>

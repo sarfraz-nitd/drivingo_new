@@ -1,3 +1,16 @@
+<?php 
+
+    $curLat = "";
+    $curLng = "";
+    
+    if(isset($_GET['lat'])&&isset($_GET['lng'])){
+        $curLat = $_GET['lat'];
+        $curLng = $_GET['lng'];
+        echo $curLat + ' ' + $curLng;
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,17 +20,31 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="materialize/js/materialize.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJh5axYNsWa63hSjco7pySOpX-IJsZ7SM" type="text/javascript"></script>
       
     <script>
+        
+        var curLat = parseFloat('<?php echo $curLat; ?>');
+        var curLng = parseFloat('<?php echo $curLng; ?>');
+        var curLatLng,curAddress;
         
         $(document).ready(function() {
             $(".review").hide();
             $('.mobile-nav-bar').hide();
             $('ul.tabs').tabs();
             
+            getLocation();
+            
             if(window.innerWidth < 600){
                 $('#filters').hide();
             }
+            
+            var address = document.getElementById('address');
+            address.addEventListener('keydown', function(event){
+               if(event.keyCode == 13){
+                   getCoordinates(address.value);
+               } 
+            });
         });
       
         function showReviews(id){
@@ -37,7 +64,63 @@
             $('#filters').hide();
             $('#sortby').show('fast');
         }
+        
+        function getLocation(){
+            curLatLng = new google.maps.LatLng(
+              parseFloat(curLat),
+              parseFloat(curLng));
+            var geocoder = new google.maps.Geocoder;
+            geocoder.geocode({'location': curLatLng}, function(results, status) {
+              if (status === 'OK') {
+                if (results[1]) {
+                  curAddress = results[1].formatted_address;
+                  $('#search-bar-header').text(results[1].address_components[1].short_name);
+                } else {
+                  window.alert('No results found');
+                }
+              } else {
+                window.alert('Geocoder failed due to: ' + status);
+              }
+            });
+        }
+        
+        function getCoordinates(address){
+            var geocoder = new google.maps.Geocoder();
+            if(address.length){
+                geocoder.geocode({'address': address}, function(results, status) {
+                    if (status === 'OK') {                      
+                        if (results[0]) {
+                          curAddress = results[0].formatted_address;
+                          curLat = results[0].geometry.location.lat();
+                          curLng = results[0].geometry.location.lng();
+                          curLatLng = new google.maps.LatLng(
+                              parseFloat(curLat),
+                              parseFloat(curLng));
+                          load();
+                          $('#search-bar-header').text(results[0].address_components[0].short_name);
+                        } else {
+                          window.alert('No results found');
+                        }
+                        
+                    } else {
+                        alert('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+            } else {
+                alert('please enter any location!');
+            }
+        }
           
+        function load() {
+          map = new google.maps.Map(document.getElementById("map"), {
+            center: new google.maps.LatLng(curLat, curLng),
+            zoom: 10,
+            mapTypeId: 'roadmap',
+            mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
+          });
+          infoWindow = new google.maps.InfoWindow();
+       }
+        
     </script>
       
     <style>
@@ -317,6 +400,15 @@
             padding-left: 0;
         }
         
+        #map{
+            width: 100%;
+            height: 620px;
+            top: -4em;
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+            border-top-left-radius: 1em;
+            border-top-right-radius: 1em;
+        }
+        
         @media screen and (max-width: 768px) {
             .main-section{
                 position: relative;
@@ -440,6 +532,15 @@
                 top: 8px;
                 padding-top: 15px;
             }
+            
+            #map{
+                width: 100%;
+                height: 300px;
+                top: -4em;
+                box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+                border-top-left-radius: none;
+                 border-top-right-radius: none;
+            }
         }
         
         @media screen and (min-width: 768px) and (max-width: 990px){
@@ -516,7 +617,7 @@
     </style>
   </head>
 
-  <body class="gradient">
+  <body class="gradient" onload="load()">
 
     <!-- Navigation
     ================================================== -->
@@ -545,12 +646,12 @@
       
     <section class="search-bar">
         <div class="row">
-            <p class="search-bar-header">Driving schools near <b>Delhi</b></p>
+            <p class="search-bar-header">Driving schools near <b id="search-bar-header">Delhi</b></p>
         </div>
         <div class="row" style="position: relative;top: -50px;">
             <div class="col m3"></div>
             <div class="col s10 m6">
-                    <input type="text" id="inputName" placeholder="Try other location..."/>
+                    <input type="text" id="address" placeholder="Try other location..."/>
             </div>  
         </div>  
         <div class="row">
@@ -560,11 +661,15 @@
             </div>
         </div>
     </section>
-
+      
+    <!-- map -->
+      
+      
       
     <!-- driving school section -->
       
     <section class="main-section">
+        <div id="map"></div>
         <div class="row main-section-header">
             <div class="col s12 m4 l4">
                 <p class="center-align main-section-result">Showing <b>7</b> schools in <b>Delhi</b></p>
