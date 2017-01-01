@@ -210,7 +210,9 @@
           -webkit-transform-origin: 100% 100%;
                   transform-origin: 100% 100%;
         }
+        
         /* Indeterminate checkbox */
+        
         [type="checkbox"]:indeterminate + label:before {
           top: -11px;
           left: -12px;
@@ -227,6 +229,7 @@
           -webkit-transform-origin: 100% 100%;
                   transform-origin: 100% 100%;
         }
+        
         [type="checkbox"].filled-in:checked + label:after {
           top: 0;
           width: 20px;
@@ -235,10 +238,18 @@
           background-color: #ee6e73;
           z-index: 0;
         }
+        
         [type="checkbox"].filled-in.tabbed:checked:focus + label:after {
           border-radius: 2px;
           background-color: #ee6e73;
           border-color: #ee6e73;
+        }
+        
+        input[type="range"] {
+            border: none;
+        }
+        input[type="range"]:focus, input[type="range"]:active {
+            border: none;
         }
         
         .head{
@@ -398,6 +409,11 @@
             position: relative;
             left: -1em;
             padding-left: 0;
+        }
+        
+        .radius-selector{
+            left: 7px;
+            top: -30px;
         }
         
         #map{
@@ -652,6 +668,9 @@
             <div class="col m3"></div>
             <div class="col s10 m6">
                     <input type="text" id="address" placeholder="Try other location..."/>
+                     <p class="range-field tooltipped radius-selector" data-position="bottom" data-delay="50" data-tooltip="Select radius from here...">
+                       <input type="range" id="test5" min="0" max="100" />
+                     </p>
             </div>  
         </div>  
         <div class="row">
