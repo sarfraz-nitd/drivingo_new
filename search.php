@@ -32,6 +32,7 @@
             $(".review").hide();
             $('.mobile-nav-bar').hide();
             $('ul.tabs').tabs();
+            $('select').material_select();
             
             getLocation();
             
@@ -252,6 +253,38 @@
             border: none;
         }
         
+        .select-wrapper input.select-dropdown {
+            position: relative;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid white;
+            outline: none;
+            height: 3rem;
+            line-height: 3rem;
+            width: 100%;
+            font-size: 1rem;
+            margin: 0 0 20px 0;
+            padding: 0;
+            display: block;
+        }
+        
+        .select-wrapper span.caret {
+            color: white;
+            position: absolute;
+            right: 0;
+            top: 16px;
+            font-size: 10px;
+        }
+        
+        .dropdown-content li > a, .dropdown-content li > span {
+            font-size: 16px;
+            color: #ee6e73;
+            display: block;
+            line-height: 22px;
+            padding: 14px 16px;
+        }
+        
         .head{
             background: #360033; /* fallback for old browsers */
             background: -webkit-linear-gradient(to left, #360033 , #0b8793); /* Chrome 10-25, Safari 5.1-6 */
@@ -425,6 +458,10 @@
             border-top-right-radius: 1em;
         }
         
+        .radius-select{
+           position: relative;
+        }
+        
         @media screen and (max-width: 768px) {
             .main-section{
                 position: relative;
@@ -557,6 +594,10 @@
                 border-top-left-radius: none;
                  border-top-right-radius: none;
             }
+            
+            .radius-select{
+                position: relative;
+            }
         }
         
         @media screen and (min-width: 768px) and (max-width: 990px){
@@ -665,13 +706,24 @@
             <p class="search-bar-header">Driving schools near <b id="search-bar-header">Delhi</b></p>
         </div>
         <div class="row" style="position: relative;top: -50px;">
-            <div class="col m3"></div>
+            <div class="col s1 m2"></div>
             <div class="col s10 m6">
                     <input type="text" id="address" placeholder="Try other location..."/>
-                     <p class="range-field tooltipped radius-selector" data-position="bottom" data-delay="50" data-tooltip="Select radius from here...">
-                       <input type="range" id="test5" min="0" max="100" />
-                     </p>
             </div>  
+            <div class="row hide-on-med-and-up"></div>
+            <div class="col s1 m2 hide-on-med-and-up"></div>
+            <div class="col m2 s10">
+                <div class="input-field col s12">
+                    <select>
+                      <option value="1">50KM</option>
+                      <option value="2">100KM</option>
+                      <option value="3">150KM</option>
+                      <option value="3">200KM</option>
+                    </select>
+                    <label>RADIUS</label>
+                </div>
+            </div>
+            
         </div>  
         <div class="row">
             <div class="col m5"></div>
