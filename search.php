@@ -12,9 +12,11 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>Near connaught place</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="materialize/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -27,6 +29,9 @@
         var curLat = parseFloat('<?php echo $curLat; ?>');
         var curLng = parseFloat('<?php echo $curLng; ?>');
         var curLatLng,curAddress;
+        var map;
+        var markers = [];
+        var infoWindow;
         
         $(document).ready(function() {
             $(".review").hide();
@@ -76,6 +81,7 @@
                 if (results[1]) {
                   curAddress = results[1].formatted_address;
                   $('#search-bar-header').text(results[1].address_components[1].short_name);
+                  
                 } else {
                   window.alert('No results found');
                 }
@@ -120,7 +126,120 @@
             mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU}
           });
           infoWindow = new google.maps.InfoWindow();
+          searchLocationsNear(curLat, curLng);
        }
+        
+       function clearLocations() {
+         infoWindow.close();
+         for (var i = 0; i < markers.length; i++) {
+           markers[i].setMap(null);
+         }
+         markers.length = 0;
+       }
+        
+       function searchLocationsNear(lat, lng) {
+         clearLocations(); 
+         var bounds = new google.maps.LatLngBounds();
+           
+         // for current location
+
+          bounds.extend(curLatLng);
+          var image = "img/current_location_50px.png";
+          createMarker(curLatLng, "Your location",curAddress,"",image);
+         
+         var radius = document.getElementById('radiusSelect').value;
+         var searchUrl = 'search_genxml.php?lat=' + lat + '&lng=' + lng + '&radius=' + radius;
+         downloadUrl(searchUrl, function(data) {
+           var xml = parseXml(data);
+           var markerNodes = xml.documentElement.getElementsByTagName("marker");
+                
+           for (var i = 0; i < markerNodes.length; i++) {
+             var name = markerNodes[i].getAttribute("name");
+             var address = markerNodes[i].getAttribute("address");
+             var type = markerNodes[i].getAttribute("type");
+             var distance = parseFloat(markerNodes[i].getAttribute("distance"));
+             var latlng = new google.maps.LatLng(
+                  parseFloat(markerNodes[i].getAttribute("lat")),
+                  parseFloat(markerNodes[i].getAttribute("lng")));
+
+             createMarker(latlng, name, address, type, "");
+             bounds.extend(latlng);
+           }
+           map.fitBounds(bounds);
+           locationSelect.style.visibility = "visible";
+           locationSelect.onchange = function() {
+             var markerNum = locationSelect.options[locationSelect.selectedIndex].value;
+             google.maps.event.trigger(markers[markerNum], 'click');
+           };
+          });
+        }
+        
+        function createMarker(latlng, name, address, type, image) {
+          var html = "<div style='color: black;'><b>" + name + "</b> <br/>" + address + "<br/>" + type + "</div><br/><a onclick='getDirections(\""+ latlng.lat() + "\",\"" + latlng.lng() +"\")' style='color: blue;cursor: pointer;'>Get directions</a>";
+
+          var marker = new google.maps.Marker({
+            map: map,
+            position: latlng,
+            icon: image
+          });
+          google.maps.event.addListener(marker, 'click', function() {
+            infoWindow.setContent(html);
+            infoWindow.open(map, marker);
+          });
+          markers.push(marker);
+        }
+
+        function downloadUrl(url, callback) {
+          var request = window.ActiveXObject ?
+              new ActiveXObject('Microsoft.XMLHTTP') :
+              new XMLHttpRequest;
+          request.onreadystatechange = function() {
+            if (request.readyState == 4) {
+              //request.onreadystatechange = doNothing;
+              callback(request.responseText, request.status);
+            }
+          };
+          request.open('GET', url, true);
+          request.send(null);
+        }
+
+        function parseXml(str) {
+          if (window.ActiveXObject) {
+            var doc = new ActiveXObject('Microsoft.XMLDOM');
+            doc.loadXML(str);
+            return doc;
+          } else if (window.DOMParser) {
+            return (new DOMParser).parseFromString(str, 'text/xml');
+          }
+        }
+        
+        function getDirections(lat, lng){
+            var directionsDisplay = new google.maps.DirectionsRenderer;
+            directionsDisplay.setMap(null);
+             var toLatLng = new google.maps.LatLng(
+                  parseFloat(lat),
+                  parseFloat(lng));
+            var directionsService = new google.maps.DirectionsService;
+            directionsDisplay.setMap(map);
+            calculateAndDisplayRoute(directionsService, directionsDisplay, toLatLng);
+
+        }
+        
+        function calculateAndDisplayRoute(directionsService, directionsDisplay, toLatLng) {
+            //var selectedMode = document.getElementById('mode').value;
+            directionsService.route({
+              origin: curLatLng,
+              destination: toLatLng,
+              travelMode: 'DRIVING',
+              provideRouteAlternatives: true,
+            }, function(response, status) {
+              if (status === 'OK') {
+                directionsDisplay.setDirections(response);
+              } else {
+                window.alert('Directions request failed due to ' + status);
+              }
+            });
+        }
         
     </script>
       
@@ -714,11 +833,11 @@
             <div class="col s1 m2 hide-on-med-and-up"></div>
             <div class="col m2 s10">
                 <div class="input-field col s12">
-                    <select>
-                      <option value="1">50KM</option>
-                      <option value="2">100KM</option>
-                      <option value="3">150KM</option>
-                      <option value="3">200KM</option>
+                    <select id="radiusSelect">
+                      <option value="50">50KM</option>
+                      <option value="100">100KM</option>
+                      <option value="150">150KM</option>
+                      <option value="200">200KM</option>
                     </select>
                     <label>RADIUS</label>
                 </div>

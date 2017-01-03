@@ -185,6 +185,57 @@
                 color: #fff;
             }
             
+            [type="checkbox"]:checked + label:before {
+              top: -4px;
+              left: -5px;
+              width: 12px;
+              height: 22px;
+              border-top: 2px solid transparent;
+              border-left: 2px solid transparent;
+              border-right: 2px solid #fff;
+              border-bottom: 2px solid #fff;
+              -webkit-transform: rotate(40deg);
+                      transform: rotate(40deg);
+              -webkit-backface-visibility: hidden;
+                      backface-visibility: hidden;
+              -webkit-transform-origin: 100% 100%;
+                      transform-origin: 100% 100%;
+            }
+
+            /* Indeterminate checkbox */
+
+            [type="checkbox"]:indeterminate + label:before {
+              top: -11px;
+              left: -12px;
+              width: 10px;
+              height: 22px;
+              border-top: none;
+              border-left: none;
+              border-right: 2px solid #fff;
+              border-bottom: none;
+              -webkit-transform: rotate(90deg);
+                      transform: rotate(90deg);
+              -webkit-backface-visibility: hidden;
+                      backface-visibility: hidden;
+              -webkit-transform-origin: 100% 100%;
+                      transform-origin: 100% 100%;
+            }
+
+            [type="checkbox"].filled-in:checked + label:after {
+              top: 0;
+              width: 20px;
+              height: 20px;
+              border: 2px solid #fff;
+              background-color: #fff;
+              z-index: 0;
+            }
+
+            [type="checkbox"].filled-in.tabbed:checked:focus + label:after {
+              border-radius: 2px;
+              background-color: #fff;
+              border-color: #fff;
+            }
+            
             
             ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
               color: #fff;
@@ -260,6 +311,18 @@
                 background: -webkit-linear-gradient(to left, #C04848 , #480048); /* Chrome 10-25, Safari 5.1-6 */
                 background: linear-gradient(to right, #C04848 , #480048); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         
+            }
+            
+            .file_btn{
+                background: #C04848; /* fallback for old browsers */
+                background: -webkit-linear-gradient(to left, #C04848 , #480048); /* Chrome 10-25, Safari 5.1-6 */
+                background: linear-gradient(to left, #C04848 , #480048); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            }
+            
+            .file_btn:hover{
+                background: #C04848; /* fallback for old browsers */
+                background: -webkit-linear-gradient(to left, #C04848 , #480048); /* Chrome 10-25, Safari 5.1-6 */
+                background: linear-gradient(to right, #C04848 , #480048); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
             }
             
             .customer-reviews{
@@ -347,7 +410,17 @@
             .logo1{
                 top: 8px;
                 left: 10px;
-            }            
+            }          
+            
+            .checkbox_label{
+                color: white;
+            }
+            
+            .service_header{
+                font-size: 1.5em;
+                color: white;
+                font-weight: 400;
+            }
             
             @media screen and (max-width: 768px){
                 .carousel-item-inner{
@@ -531,38 +604,67 @@
                         <form class="col s12">
                           <div class="row">
                             <div class="input-field col s12">
-                              <input placeholder="First Name" id="first_name" type="text" class="validate">
+                              <input placeholder="Owner's First Name" id="first_name" name="o_firstname" type="text" class="validate">
                             </div>
                           </div>
                           <div class="row">
                             <div class="input-field col s12">
-                              <input id="last_name" placeholder="Last Name" type="text" class="validate">
+                              <input id="last_name" placeholder="Owner's Last Name" name="o_lastname" type="text" class="validate">
                             </div>
                           </div>
                           <div class="row">
                             <div class="input-field col s12">
-                              <input id="password" placeholder="Password" type="password" class="validate">
+                              <input id="password" placeholder="Password" name="d_password" type="password" class="validate">
                             </div>
                           </div>
                           <div class="row">
                             <div class="input-field col s12">
-                              <input id="password" placeholder="Confirm Password" type="password" class="validate">
+                              <input id="password" placeholder="Confirm Password" name="d_confirm_password" type="password" class="validate">
                             </div>
                           </div>
                           <div class="row">
                             <div class="input-field col s12">
-                              <input id="email" placeholder="Email" type="email" class="validate">
+                              <input id="email" placeholder="Email" name="d_email" type="email" class="validate">
                             </div>
                           </div>
                           <div class="row">
                             <div class="input-field col s12">
-                              <input id="password" placeholder="Name of driving school" type="text" class="validate">
+                              <textarea id="textarea1" class="materialize-textarea">Tell us about your driving school.</textarea>
                             </div>
                           </div>
                           <div class="row">
                             <div class="input-field col s12">
                               <input id="password" placeholder="Address" type="text" class="validate">
                             </div>
+                          </div>
+                          <div class="row" style="margin-left: 0;">
+                            <p class="service_header">Services provided</p>
+                            <p>
+                              <input type="checkbox" id="test5" checked="checked" />
+                              <label class="checkbox_label" for="test5">CARS</label>
+                            </p>
+                            <p>
+                              <input type="checkbox" id="test6" />
+                              <label class="checkbox_label" for="test6">SUVS</label>
+                            </p>
+                            <p>
+                              <input type="checkbox" id="test7" />
+                              <label class="checkbox_label" for="test7">TRUCKS</label>
+                            </p>  
+                          </div>
+                          <div class="row">
+                            <div class="file-field input-field">
+                              <div class="btn file_btn">
+                                <span>Cover photo</span>
+                                <input type="file">
+                              </div>
+                              <div class="file-path-wrapper">
+                                <input class="file-path validate" style="border-left: none;border-top: none;" type="text">
+                              </div>
+                            </div>  
+                          </div>
+                          <div class="row center-align">
+                            <input type="submit" value="Submit" class="btn btn-large file_btn">  
                           </div>
                         </form>
                       </div>
