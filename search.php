@@ -52,6 +52,10 @@
                } 
             });
         });
+        
+        function radiusChange(){
+            load();
+        }
       
         function showReviews(id){
             $(id).slideToggle('slow');
@@ -148,10 +152,14 @@
           createMarker(curLatLng, "Your location",curAddress,"",image);
          
          var radius = document.getElementById('radiusSelect').value;
-         var searchUrl = 'search_genxml.php?lat=' + lat + '&lng=' + lng + '&radius=' + radius;
+         var searchUrl = 'include/search_genxml.php?lat=' + lat + '&lng=' + lng + '&radius=' + radius;
          downloadUrl(searchUrl, function(data) {
            var xml = parseXml(data);
            var markerNodes = xml.documentElement.getElementsByTagName("marker");
+             
+             if(!markerNodes.length){
+                 alert('No result found! please try increasing the radius.');
+             }
                 
            for (var i = 0; i < markerNodes.length; i++) {
              var name = markerNodes[i].getAttribute("name");
@@ -833,7 +841,7 @@
             <div class="col s1 m2 hide-on-med-and-up"></div>
             <div class="col m2 s10">
                 <div class="input-field col s12">
-                    <select id="radiusSelect">
+                    <select id="radiusSelect" onchange="radiusChange();">
                       <option value="50">50KM</option>
                       <option value="100">100KM</option>
                       <option value="150">150KM</option>
