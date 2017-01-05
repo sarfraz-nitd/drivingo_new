@@ -40,8 +40,19 @@ session_start();
                 $('.mobile-nav-bar').hide();
                 $('#driving-school').hide();
                 $('#user').hide();
+                
+                var inputAddress = document.getElementById('address');
+                inputAddress.addEventListener('keydown', function(event){
+                    if(event.keyCode == 13){
+                        getCoordinates();
+                    }   
+                });
+                
                 $('.modal').modal();
+                $('.tooltipped').tooltip({delay: 50});
+            
             });
+            
             
             function slideImage(){
                 $('.carousel').carousel('next');
@@ -173,10 +184,9 @@ session_start();
                     <div class="col s1 m3 l4"></div>
                     <div class="input-field col s10 m6 l4">
                       <input placeholder="Enter any location..." id="address" type="text" class="validate">
-                      <span class="location-icon" onclick="currentLocation()"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                      <span class="location-icon tooltipped" data-position="bottom" data-delay="50" data-tooltip="current location" onclick="currentLocation()"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
                     </div>  
                   </div>  
-                  <a class="btn waves-effect white grey-text darken-text-2" onclick="getCoordinates()">Search</a>
                 </div>
                 <div class="carousel-item carousel-item-one white-text" href="#one!"></div>
                 <div class="carousel-item carousel-item-two white-text" href="#two!"></div>
