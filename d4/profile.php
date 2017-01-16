@@ -10,6 +10,7 @@
     $address = "";
     $services = "";
     $schoolId = "";
+    $package_counter = 0;
 
     if(isset($_POST['schoolId'])){
         $schoolId = $_POST['schoolId'];
@@ -32,7 +33,22 @@
         $query1 = "SELECT * FROM profile_school WHERE school_id = $schoolId";
         if($query1_run = mysqli_query($mysqli, $query1)){
             while($row = mysqli_fetch_assoc($query1_run)){
-                echo $about_owner = $row['about'];
+                $about_owner = $row['about'];
+            }
+        } else {
+            echo mysqli_error($mysqli);
+        }
+
+        $query2 = "SELECT * FROM packages WHERE school_id = $schoolId";
+        if($query2_run = mysqli_query($mysqli, $query2)){
+            while($row = mysqli_fetch_assoc($query2_run)){
+                $package_name[$package_counter] = $row['package_name'];
+                $price[$package_counter] = $row['price'];
+                $detail_one[$package_counter] = $row['detail_one'];
+                $detail_two[$package_counter] = $row['detail_two'];
+                $detail_three[$package_counter] = $row['detail_three'];
+                $package_id[$package_counter] = $row['id'];
+                $package_counter++;
             }
         } else {
             echo mysqli_error($mysqli);
@@ -80,6 +96,12 @@
 
             function openPackageModal(){
                 $('#package-modal').openModal();
+            }
+
+            function removePackage(pid){
+                $('#package_id').val(pid);
+                $('#package_school_id').val(<?php echo $schoolId; ?>);
+                $('#package_remove_form').submit();
             }
         </script>
         
@@ -635,7 +657,7 @@
                   <div id="structure" class="section scrollspy move-right">
                     <h2 class="scrollspy-header">About Owner</h2>
                     <p><?php echo $schools_name; ?> is owned by <?php echo $owners_name; ?>.</p>
-                    <p>This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.This will contain all the relevant information about the owner whatever he/she wants to share.</p>
+                    <p id="about_body"><?php if(strlen($about_owner) == 0) echo '<span style="font-size: 1.5em;color: red;">please update your profile!</span>'; else echo '<span style="font-size: 1.1em;font-weight: 400;">'.$about_owner.'</span>'; ?></p>
                   </div>
 
                   <div class="row">
@@ -650,6 +672,7 @@
                     </form>
                   </div>
         
+                  <?php if($package_counter == 0){ ?>
 
                   <div id="initialization" class="section scrollspy move-right">
                     <h2 class="scrollspy-header">Packages</h2>
@@ -692,6 +715,41 @@
                         <button class="btn add-btn btn-flat" onclick="openPackageModal();">Add package</button>
                     </div>
                   </div>
+
+                  <?php } else { ?>
+
+                  <div id="initialization" class="section scrollspy move-right">
+                    <h2 class="scrollspy-header">Packages</h2>
+                    
+
+                    <?php for($i=0; $i < $package_counter; $i++){ ?>
+
+                        <div class="columns">
+                          <ul class="price">
+                            <li class="header gradient"><?php echo $package_name[$i]; ?></li>
+                            <li class="grey"><?php echo 'Rs.'.$price[$i]; ?></li>
+                            <?php
+                                if(strlen($detail_one[$i]) > 0) echo '<li>'.$detail_one[$i].'</li>';
+                                if(strlen($detail_two[$i]) > 0) echo '<li>'.$detail_two[$i].'</li>';
+                                if(strlen($detail_three[$i]) > 0) echo '<li>'.$detail_three[$i].'</li>';
+                             ?>
+                            <li class="grey"><a href="#" class="button gradient">Purchase</a>&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-flat" onclick="removePackage('<?php echo $package_id[$i]; ?>')">Remove</a></li>
+                          </ul>
+                        </div>
+
+                    <?php } ?>
+
+                    <form action="update_profile.php" id="package_remove_form" method="post">
+                        <input id="package_id" name="package_id" type="hidden" value="">
+                        <input id="package_school_id" name="schoolId" type="hidden" value="">
+                    </form>
+                    
+                    <div class="row">
+                        <button class="btn add-btn btn-flat" onclick="openPackageModal();">Add package</button>
+                    </div>
+                  </div>
+
+                  <?php } ?>
                     
                   <div id="gallery" class="section scrollspy move-right">
                     
@@ -777,42 +835,45 @@
           <div id="package-modal" class="modal modal-fixed-footer package-modal">
             <div class="modal-content">
               <h4 style="text-align: center; color: #490147;">ADD PACKAGE</h4>
-              <div class="row">
-                <div class="input-field col s12">
-                  <input type="text" class="validate">
-                  <label for="email">Package name</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="input-field col s12">
-                  <input type="text" class="validate">
-                  <label for="email">Price</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="input-field col s12">
-                  <input type="text" class="validate">
-                  <label for="email">Package detail</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="input-field col s12">
-                  <input type="text" class="validate">
-                  <label for="email">Package detail</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="input-field col s12">
-                  <input type="text" class="validate">
-                  <label for="email">Package detail</label>
-                </div>
-              </div>
+              <form action="update_profile.php" method="post">
+                  <input name="schoolId" type="hidden" value="<?php echo $schoolId; ?>">
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input type="text" name="package_name" class="validate" required>
+                      <label for="email">Package name</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input name="price" type="text" class="validate" required>
+                      <label for="email">Price</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input name="detail_one" type="text" class="validate">
+                      <label for="email">Package detail</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input name="detail_two" type="text" class="validate">
+                      <label for="email">Package detail</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input name="detail_three" type="text" class="validate">
+                      <label for="email">Package detail</label>
+                    </div>
+                  </div>
 
-            </div>
-            <div class="modal-footer">
-              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">CLOSE</a>
-              <button class="btn gradient">ADD</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">CLOSE</a>
+                  <button type="submit" class="btn gradient">ADD</button>
+                </div>
+            </form>
           </div>
         
         <script>
