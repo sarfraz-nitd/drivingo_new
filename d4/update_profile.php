@@ -15,27 +15,7 @@
 				if($query2_run = mysqli_query($mysqli, $query2)){
 					echo 'success';
 			
-					$url = 'profile.php';
-					$data = array('schoolId' => $schoolId);
-
-					// use key 'http' even if you send the request to https://...
-					$options = array(
-					    'http' => array(
-					        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-					        'method'  => 'POST',
-					        'content' => http_build_query($data)
-					    )
-					);
-
-					$context  = stream_context_create($options);
-					$result = file_get_contents($url, false, $context);
-					if ($result === FALSE) { /* Handle error */ 
-						echo 'post error';
-					}
-
-					echo $result;
-
-					//var_dump($result);
+					redirect($schoolId);
 
 				} else {
 					echo mysqli_error($msyqli);
@@ -47,27 +27,7 @@
 				if($query2_run = mysqli_query($mysqli, $query2)){
 					echo 'success';
 			
-					$url = 'https://localhost/drivingo_new/d4/profile.php';
-					$data = array('schoolId' => '$schoolId');
-
-					// use key 'http' even if you send the request to https://...
-					$options = array(
-					    'http' => array(
-					        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-					        'method'  => 'POST',
-					        'content' => http_build_query($data)
-					    )
-					);
-
-					$context  = stream_context_create($options);
-					$result = file_get_contents($url, false, $context);
-					if ($result === FALSE) { /* Handle error */ 
-						echo 'post error';
-					}
-
-					echo $result;
-
-					//var_dump($result);
+					redirect($schoolId);
 
 				} else {
 					echo mysqli_error($mysqli);
@@ -79,6 +39,8 @@
 
 			echo mysqli_error($mysqli);
 		}
+	} else {
+		redirect($_POST['schoolId']);
 	}
 
 	if(isset($_POST['schoolId'])&&isset($_POST['package_name'])&&isset($_POST['price'])){
@@ -93,25 +55,7 @@
 		if($query1_run = mysqli_query($mysqli, $query1)){
 			echo "inserted into packages.";
 
-			$url = 'https://localhost/drivingo_new/d4/profile.php';
-			$data = array('schoolId' => $schoolId);
-
-			// use key 'http' even if you send the request to https://...
-			$options = array(
-				'http' => array(
-						'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-						'method'  => 'POST',
-				        'content' => http_build_query($data)
-				    )
-				);
-
-				$context  = stream_context_create($options);
-				$result = file_get_contents($url, false, $context);
-				if ($result === FALSE) { /* Handle error */ 
-					echo 'post error';
-				}
-
-				echo $result;
+			redirect($schoolId);
 
 		} else {
 			echo mysqli_error($mysqli);
@@ -126,28 +70,61 @@
 		if(mysqli_query($mysqli, $query3)){
 			echo 'successfully deleted';
 
-			$url = 'https://localhost/drivingo_new/d4/profile.php';
-			$data = array('schoolId' => $schoolId);
-
-			// use key 'http' even if you send the request to https://...
-			$options = array(
-				'http' => array(
-						'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-						'method'  => 'POST',
-				        'content' => http_build_query($data)
-				    )
-				);
-
-				$context  = stream_context_create($options);
-				$result = file_get_contents($url, false, $context);
-				if ($result === FALSE) { /* Handle error */ 
-					echo 'post error';
-				}
-
-				echo $result;
+			redirect($schoolId);
 		} else {
 			echo mysqli_error($mysqli);
 		}
+	}
+
+	if(isset($_POST['schoolId'])&&isset($_FILES['file'])){
+		$filename = $_FILES['file']['name'];
+		$tmp_filename = $_FILES['file']['tmp_name'];
+		$schoolId = $_POST['schoolId'];
+
+		if($semail = getSid($schoolId)){
+			$directory = "uploads/$semail/gallery";
+			if (!file_exists($directory)) {
+                mkdir($directory, 0777, true);
+            }
+			
+				
+
+				// Returns array of files
+				$files = scandir($directory);
+
+				// Count number of files and store them to variable..
+				$num_files = count($files)-2;
+				$imageFileType = pathinfo($filename,PATHINFO_EXTENSION);
+
+				if(move_uploaded_file($tmp_filename, $directory.'/'.($num_files+1).'.'.$imageFileType)){
+					echo 'uploaded';
+
+					redirect($schoolId);
+
+				}else{
+					echo 'fail';
+				}
+			
+			
+		}
+
+		
+	}
+
+	function getSid($sid){
+		global $mysqli;
+		$query = "SELECT * from `schools` where `id` = '".$sid."'";
+		if($query_run = mysqli_query($mysqli, $query)){
+			if(mysqli_num_rows($query_run)>=1){
+				$row = mysqli_fetch_assoc($query_run);
+				return $row['email'];
+			}
+		}
+		return false;
+	}
+
+	function redirect($id){
+		header('Location: profile.php?hash='.$id);
 	}
 
 ?>

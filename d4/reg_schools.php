@@ -31,6 +31,9 @@
             if (!file_exists($target_dir)) {
                 mkdir($target_dir, 0777, true);
             }
+            if (!file_exists($target_dir.'/gallery')) {
+                mkdir($target_dir.'/gallery', 0777, true);
+            }
             $target_dir.="/";
             echo $file_name = $_FILES['d_cover_photo']['name'];
             echo $file_tmp = $_FILES['d_cover_photo']['tmp_name'];

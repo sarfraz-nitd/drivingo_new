@@ -1,5 +1,7 @@
 <?php
 
+    session_start();
+
     require('connect.php');
 
     $owners_name = "";
@@ -12,8 +14,8 @@
     $schoolId = "";
     $package_counter = 0;
 
-    if(isset($_POST['schoolId'])){
-        $schoolId = $_POST['schoolId'];
+    if(isset($_GET['hash'])){
+        $schoolId = $_GET['hash'];
 
         $query = "SELECT * FROM schools WHERE id = $schoolId";
         if($query_run = mysqli_query($mysqli, $query)){
@@ -54,6 +56,17 @@
             echo mysqli_error($mysqli);
         }
     }
+
+    function display_edit_details(){
+        $flag = false;
+        global $schoolId;
+        if($_SESSION['type'] == 'd_school' && $schoolId == $_SESSION['loggedin']){
+            $flag = true;
+        }
+        return $flag;
+    }
+
+    
 
 ?>
 
@@ -631,6 +644,7 @@
                 <li class="table-of-contents-inner"><a href="#initialization">Packages</a></li>
                 <li class="table-of-contents-inner"><a href="#gallery">Gallery</a></li>
                 <li class="table-of-contents-inner"><a href="#comments">Comments</a></li>
+
               </ul>
               <div class="row feedback">
                 <div class="input-field col s12">
@@ -660,6 +674,8 @@
                     <p id="about_body"><?php if(strlen($about_owner) == 0) echo '<span style="font-size: 1.5em;color: red;">please update your profile!</span>'; else echo '<span style="font-size: 1.1em;font-weight: 400;">'.$about_owner.'</span>'; ?></p>
                   </div>
 
+                  <?php if(display_edit_details()) { ?>
+
                   <div class="row">
                     <form class="col s12" id="editAbout" action="update_profile.php" method="post">
                       <div class="row">
@@ -672,7 +688,10 @@
                     </form>
                   </div>
         
-                  <?php if($package_counter == 0){ ?>
+                  <?php 
+                        }
+                        if($package_counter == 0){ 
+                  ?>
 
                   <div id="initialization" class="section scrollspy move-right">
                     <h2 class="scrollspy-header">Packages</h2>
@@ -743,10 +762,16 @@
                         <input id="package_id" name="package_id" type="hidden" value="">
                         <input id="package_school_id" name="schoolId" type="hidden" value="">
                     </form>
+
+                    
                     
                     <div class="row">
+                        <?php if(display_edit_details()) { ?>
                         <button class="btn add-btn btn-flat" onclick="openPackageModal();">Add package</button>
+                        <?php } ?>
                     </div>
+
+                    
                   </div>
 
                   <?php } ?>
@@ -756,41 +781,52 @@
                     <h2 class="scrollspy-header">Gallery</h2>
                     <div class="slideshow-container">
 
-                    <div class="mySlides fade">
-                      <div class="numbertext">1 / 3</div>
-                      <img src="img/beautiful.jpg" style="width:100%">
-                    </div>
+                    <?php
+                        $directory = 'uploads/'.$email.'/gallery/';
+                        $files = scandir($directory);
+                        $n = count($files);
+                        for($i=2; $i<$n;$i++){
+
+                    ?>
 
                     <div class="mySlides fade">
-                      <div class="numbertext">2 / 3</div>
-                      <img src="img/driving-1.jpg" style="width:100%">
+                      <div class="numbertext"><?php echo ($i-1).'/'.($n-2); ?></div>
+                      <img src="<?php echo $directory.$files[$i]; ?>" style="width:100%">
                     </div>
 
-                    <div class="mySlides fade">
-                      <div class="numbertext">3 / 3</div>
-                      <img src="img/license.jpg" style="width:100%">
+                    <?php } ?>
                     </div>
 
-                    </div>
                     <br>
 
                     <div style="text-align:center">
-                      <span class="dot"></span> 
-                      <span class="dot"></span> 
-                      <span class="dot"></span> 
+                        <?php for($i=2; $i<$n;$i++){ 
+                                echo '<span class="dot"></span>';
+                              }
+                        ?>
                     </div>
 
-                    <div class="row">
-                        <div class="file-field input-field">
+                    <?php if(display_edit_details()) { ?>
+
+                    <div class="row">                     
+                      <form action="update_profile.php" method="post" enctype="multipart/form-data">
+                        <div class="file-field input-field col l10 m10 s12">
                           <div class="btn add-btn btn-flat">
                             <span>Upload</span>
-                            <input type="file">
-                          </div>
+                            <input type="file" name="file">
+                          </div> 
+                          <input type="hidden" name="schoolId" value="<?php echo $schoolId; ?>">
                           <div class="file-path-wrapper">
                             <input class="file-path validate" type="text">
                           </div>
                         </div>
+                        <div class="col l2 m2 s12">
+                            <input type="submit" name="imageBtn" class="btn btn-flat" value="ADD" style="margin-top: 2em;">
+                        </div>
+                      </form>
                     </div>
+
+                    <?php } ?>
                   
                   </div>
                     

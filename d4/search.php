@@ -363,7 +363,6 @@
                                         '</div>' +
                                         '<div class="card-action">' +
                                             '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
-                                            '<a href="" style="color: #2C204A;" class="direction-text">Get directions</a>' +
                                             '<a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>' +
                                         '</div>' +
                                         '<div class="card-reveal">' +
@@ -396,7 +395,7 @@
                                         '</div>' +
                                         '<div class="card-action">' +
                                             '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
-                                            '<a href="" style="color: #2C204A;" class="direction-text">Get directions</a>' +
+                                            
                                             '<a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>' +
                                         '</div>' +
                                         '<div class="card-reveal">' +
@@ -437,7 +436,7 @@
                                         '</div>' +
                                         '<div class="card-action">' +
                                             '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
-                                            '<a href="" style="color: #2C204A;" class="direction-text">Get directions</a>' +
+                                            
                                             '<a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>' +
                                         '</div>' +
                                         '<div class="card-reveal">' +
@@ -470,7 +469,7 @@
                                         '</div>' +
                                         '<div class="card-action">' +
                                             '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
-                                            '<a href="" style="color: #2C204A;" class="direction-text">Get directions</a>' +
+                                            
                                             '<a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>' +
                                         '</div>' +
                                         '<div class="card-reveal">' +
@@ -509,7 +508,7 @@
                                         '</div>' +
                                         '<div class="card-action">' +
                                             '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
-                                            '<a href="" style="color: #2C204A;" class="direction-text">Get directions</a>' +
+                                            
                                             '<a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>' +
                                         '</div>' +
                                         '<div class="card-reveal">' +
@@ -557,8 +556,8 @@
 
     <!-- hidden form -->
 
-    <form action="profile.php" id="subscribe_form" method="post">
-      <input type="hidden" name="schoolId" id="schoolId" value="" />
+    <form action="profile.php" id="subscribe_form" method="get">
+      <input type="hidden" name="hash" id="schoolId" value="" />
     </form>
 
     <!-- Navigation
@@ -742,395 +741,7 @@
                 </div>
             </div>
             <div class="col m8" id="cards-wrapper" style="color: black;">
-                <!--div class="row">
-                    <div class="col s12 m12 l6">
-                        <div class="card card-position sticky-action">
-                            <div class="card-image waves-effect waves-block waves-light">
-                              <img class="activator" src="img/driving-1.jpg">
-                            </div>
-                            <div class="card-content">
-                              <span class="card-title activator grey-text text-darken-4">Mellisa Driving School<i class="material-icons right">more_vert</i></span>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn btn-md btn-subscribe">subscribe</button>&nbsp;&nbsp;&nbsp;
-                                <a href="" style="color: #2C204A;" class="direction-text">Get directions</a>
-                                <a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>
-                            </div>
-                            <div class="card-reveal">
-                              <span class="card-title grey-text text-darken-4">Mellisa Driving School<i class="material-icons right-cross">close</i></span>
-                              <div class="card-reveal-inner">
-                                  <p style="color: black;font-size: 1.2em;font-weight: 300;margin-top: 2em;">Twenty hours in-class. Ten hours in car. Homelink assignment.</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">ADDRESS</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">F-6, Pal Market Main Road, Mandawali, New Delhi, Delhi 110092</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">DISTANCE</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">10 KM</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">OWNER</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">Sarang Kartikey</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">EMAIL</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">sarangkartikey50@gmail.com</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">PHONE</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">8962636894</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">SERVICES</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">CARS/SUV</p>
-                                  <div class="row center-align" style="color: #2C204A;">
-                                        <div class="col s12">
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                        </div>    
-                                    </div>
-                                    <div>
-                                        <p style="color: #2C204A;" class="center-align" onclick="showReviews('#review-1');">See reviews</p>   
-                                            <div class="review" id="review-1">
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                            </div>
-                                    </div>  
-                              </div>
-                            </div>
-                          </div>
-                    </div>
-                    <div class="col s12 m12 l6">
-                        <div class="card card-position sticky-action">
-                            <div class="card-image waves-effect waves-block waves-light">
-                              <img class="activator" src="img/School.jpg">
-                            </div>
-                            <div class="card-content">
-                              <span class="card-title activator grey-text text-darken-4">Raul's Driving School<i class="material-icons right">more_vert</i></span>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn btn-md btn-subscribe">subscribe</button>&nbsp;&nbsp;&nbsp;
-                                <a href="" style="color: #2C204A;" class="direction-text">Get directions</a>
-                                <a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>
-                            </div>
-                            <div class="card-reveal">
-                              <span class="card-title grey-text text-darken-4">Raul's Driving School<i class="material-icons right-cross">close</i></span>
-                              <div class="card-reveal-inner">
-                                  <p style="color: black;font-size: 1.2em;font-weight: 300;margin-top: 2em;">Twenty hours in-class. Ten hours in car. Homelink assignment.</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">ADDRESS</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">F-6, Pal Market Main Road, Mandawali, New Delhi, Delhi 110092</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">DISTANCE</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">10 KM</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">OWNER</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">Sarang Kartikey</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">EMAIL</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">sarangkartikey50@gmail.com</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">PHONE</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">8962636894</p>
-                                  <p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">SERVICES</p>
-                                  <p style="color: black;font-size: 1em; font-weight: 300">CARS/SUV</p>
-                                  <div class="row center-align" style="color: #2C204A;">
-                                        <div class="col s12">
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                        </div>    
-                                    </div>
-                                    <div>
-                                        <p style="color: #2C204A;" class="center-align" onclick="showReviews('#review-1');">See reviews</p>   
-                                            <div class="review" id="review-1">
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                            </div>
-                                    </div>  
-                              </div>
-                            </div>
-                          </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s12 m12 l6">
-                        <div class="card card-position sticky-action">
-                            <div class="card-image waves-effect waves-block waves-light">
-                              <img class="activator" src="img/bg-1.jpg">
-                            </div>
-                            <div class="card-content">
-                              <span class="card-title activator grey-text text-darken-4">Rello Driving School<i class="material-icons right">more_vert</i></span>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn btn-md btn-subscribe">subscribe</button>&nbsp;&nbsp;&nbsp;
-                                <a href="" style="color: #2C204A;" class="direction-text">Get directions</a>
-                                <a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>
-                            </div>
-                            <div class="card-reveal">
-                              <span class="card-title grey-text text-darken-4">Rello Driving School<i class="material-icons right-cross">close</i></span>
-                              <div class="card-reveal-inner">
-                                  <p style="color: black;font-size: 1.2em;font-weight: 100;margin-top: 2em;">Twenty hours in-class. Ten hours in car. Homelink assignment.</p>
-                                  <div class="row center-align" style="color: #2C204A;">
-                                        <div class="col s12">
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                        </div>    
-                                    </div>
-                                    <div>
-                                        <p style="color: #2C204A;" class="center-align" onclick="showReviews('#review-3');">See reviews</p>   
-                                            <div class="review" id="review-3">
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                            </div>
-                                    </div>  
-                              </div>
-                            </div>
-                          </div>
-                    </div>
-                    <div class="col s12 m12 l6">
-                        <div class="card card-position sticky-action">
-                            <div class="card-image waves-effect waves-block waves-light">
-                              <img class="activator" src="img/bg-3.jpg">
-                            </div>
-                            <div class="card-content">
-                              <span class="card-title activator grey-text text-darken-4">Louisa Driving School<i class="material-icons right">more_vert</i></span>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn btn-md btn-subscribe">subscribe</button>&nbsp;&nbsp;&nbsp;
-                                <a href="" style="color: #2C204A;" class="direction-text">Get directions</a>
-                                <a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>
-                            </div>
-                            <div class="card-reveal">
-                              <span class="card-title grey-text text-darken-4">Louisa Driving School<i class="material-icons right-cross">close</i></span>
-                              <div class="card-reveal-inner">
-                                  <p style="color: black;font-size: 1.2em;font-weight: 100;margin-top: 2em;">Twenty hours in-class. Ten hours in car. Homelink assignment.</p>
-                                  <div class="row center-align" style="color: #2C204A;">
-                                        <div class="col s12">
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                        </div>    
-                                    </div>
-                                    <div>
-                                        <p style="color: #2C204A;" class="center-align" onclick="showReviews('#review-4');">See reviews</p>   
-                                            <div class="review" id="review-4">
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                            </div>
-                                    </div>  
-                              </div>
-                            </div>
-                          </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s12 m12 l6">
-                        <div class="card card-position sticky-action">
-                            <div class="card-image waves-effect waves-block waves-light">
-                              <img class="activator" src="img/bg-header.jpg">
-                            </div>
-                            <div class="card-content">
-                              <span class="card-title activator grey-text text-darken-4">Jacob Driving School<i class="material-icons right">more_vert</i></span>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn btn-md btn-subscribe">subscribe</button>&nbsp;&nbsp;&nbsp;
-                                <a href="" style="color: #2C204A;" class="direction-text">Get directions</a>
-                                <a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>
-                            </div>
-                            <div class="card-reveal">
-                              <span class="card-title grey-text text-darken-4">Jacob Driving School<i class="material-icons right-cross">close</i></span>
-                              <div class="card-reveal-inner">
-                                  <p style="color: black;font-size: 1.2em;font-weight: 100;margin-top: 2em;">Twenty hours in-class. Ten hours in car. Homelink assignment.</p>
-                                  <div class="row center-align" style="color: #2C204A;">
-                                        <div class="col s12">
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                        </div>    
-                                    </div>
-                                    <div>
-                                        <p style="color: #2C204A;" class="center-align" onclick="showReviews('#review-5');">See reviews</p>   
-                                            <div class="review" id="review-5">
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                            </div>
-                                    </div>  
-                              </div>
-                            </div>
-                          </div>
-                    </div>
-                    <div class="col s12 m12 l6">
-                        <div class="card card-position sticky-action">
-                            <div class="card-image waves-effect waves-block waves-light">
-                              <img class="activator" src="img/School.jpg">
-                            </div>
-                            <div class="card-content">
-                              <span class="card-title activator grey-text text-darken-4">Jetallo Driving School<i class="material-icons right">more_vert</i></span>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn btn-md btn-subscribe">subscribe</button>&nbsp;&nbsp;&nbsp;
-                                <a href="" style="color: #2C204A;" class="direction-text">Get directions</a>
-                                <a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>
-                            </div>
-                            <div class="card-reveal">
-                              <span class="card-title grey-text text-darken-4">Jetallo Driving School<i class="material-icons right-cross">close</i></span>
-                              <div class="card-reveal-inner">
-                                  <p style="color: black;font-size: 1.2em;font-weight: 100;margin-top: 2em;">Twenty hours in-class. Ten hours in car. Homelink assignment.</p>
-                                  <div class="row center-align" style="color: #2C204A;">
-                                        <div class="col s12">
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                        </div>    
-                                    </div>
-                                    <div>
-                                        <p style="color: #2C204A;" class="center-align" onclick="showReviews('#review-6');">See reviews</p>   
-                                            <div class="review" id="review-6">
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                            </div>
-                                    </div>  
-                              </div>
-                            </div>
-                          </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s12 m12 l6">
-                        <div class="card card-position sticky-action">
-                            <div class="card-image waves-effect waves-block waves-light">
-                              <img class="activator" src="img/School.jpg">
-                            </div>
-                            <div class="card-content">
-                              <span class="card-title activator grey-text text-darken-4">Jetallo Driving School<i class="material-icons right">more_vert</i></span>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn btn-md btn-subscribe">subscribe</button>&nbsp;&nbsp;&nbsp;
-                                <a href="" style="color: #2C204A;" class="direction-text">Get directions</a>
-                                <a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>
-                            </div>
-                            <div class="card-reveal">
-                              <span class="card-title grey-text text-darken-4">Jetallo Driving School<i class="material-icons right-cross">close</i></span>
-                              <div class="card-reveal-inner">
-                                  <p style="color: black;font-size: 1.2em;font-weight: 100;margin-top: 2em;">Twenty hours in-class. Ten hours in car. Homelink assignment.</p>
-                                  <div class="row center-align" style="color: #2C204A;">
-                                        <div class="col s12">
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                            <span><i class="fa fa-star-o fa-2x" aria-hidden="true"></i></span>
-                                        </div>    
-                                    </div>
-                                    <div>
-                                        <p style="color: #2C204A;" class="center-align" onclick="showReviews('#review-7');">See reviews</p>   
-                                            <div class="review" id="review-7">
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                                <div class="row">
-                                                    <span class="reviewer-name text-left" style="color: grey">sarang kartikey</span>
-                                                    <p style="color: black;">It's a very good driving school with lots of facilities.</p>
-                                                </div>
-                                            </div>
-                                    </div>  
-                              </div>
-                            </div>
-                          </div>
-                    </div>
-                </div-->
+                
             </div>
         </div>
     </section>

@@ -21,7 +21,8 @@ require_once('connect.php');
       if($query_run = mysqli_query($mysqli, $query)){
             if(mysqli_num_rows($query_run)==1){
                  while($row = mysqli_fetch_assoc($query_run)){
-      $_SESSION['loggedin'] = $row['name'];
+                  $_SESSION['loggedin'] = $row['id'];
+                  $_SESSION['type'] = $type;
      }
             }
       }else{
