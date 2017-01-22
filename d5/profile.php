@@ -4,9 +4,9 @@
 
     require('connect.php');
 
-    if(!isset($_SESSION['type'])||!isset($_SESSION['loggedin'])){
+    /*if(!isset($_SESSION['type'])||!isset($_SESSION['loggedin'])){
         header("Location: index.php");
-    }
+    }*/
 
     $owners_name = "";
     $schools_name = "";
@@ -678,7 +678,7 @@
                   <div id="structure" class="section scrollspy move-right">
                     <h2 class="scrollspy-header">About Owner</h2>
                     <p><?php echo $schools_name; ?> is owned by <?php echo $owners_name; ?>.</p>
-                    <p id="about_body"><?php if(strlen($about_owner) == 0) echo '<span style="font-size: 1.5em;color: red;">please update your profile!</span>'; else echo '<span style="font-size: 1.1em;font-weight: 400;">'.$about_owner.'</span>'; ?></p>
+                    <p id="about_body"><?php if(strlen($about_owner) == 0 && display_edit_details()) echo '<span style="font-size: 1.5em;color: red;">please update your profile!</span>'; else echo '<span style="font-size: 1.1em;font-weight: 400;">'.$about_owner.'</span>'; ?></p>
                   </div>
 
                   <?php if(display_edit_details()) { ?>
@@ -737,9 +737,11 @@
                         <li class="grey"><a href="#" class="button gradient">Purchase</a></li>
                       </ul>
                     </div>
-                    <div class="row">
-                        <button class="btn add-btn btn-flat" onclick="openPackageModal();">Add package</button>
-                    </div>
+                    <?php if(display_edit_details()) { ?>
+                        <div class="row">
+                            <button class="btn add-btn btn-flat" onclick="openPackageModal();">Add package</button>
+                        </div>
+                    <?php } ?>
                   </div>
 
                   <?php } else { ?>
