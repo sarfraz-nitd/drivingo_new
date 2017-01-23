@@ -8,6 +8,10 @@ $user_lastname = '';
 $user_email = '';
 $user_picture = '';
 $user_name = '';
+$table = "";
+$user_phone = '';
+
+
 
 require_once('connect.php');
     if(isset($_SESSION['activated'])){
@@ -26,6 +30,19 @@ require_once('connect.php');
 
       header('Location: index.php');
     }
+
+    if(isset($_SESSION['user_type']) && isset($_SESSION['login_type'])){
+      if($_SESSION['user_type'] == 'user' && $_SESSION['login_type'] == 'facebook'){
+        $table = "fb_users";
+      } else if($_SESSION['user_type'] == 'user' && $_SESSION['login_type'] == 'google'){
+        $table = "g_users";
+      }else if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'facebook'){
+        $table = "fb_schools";
+      }else if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'google'){
+        $table = "g_schools";
+      }
+    }
+
       if(isset($_POST['loginbtn'])){
        $lemail = $_POST['loginemail'];
        $lpass = $_POST['loginpassword'];
@@ -67,14 +84,13 @@ require_once('connect.php');
        
    }
 
-session_destroy();
    if(isset($_SESSION['login_type']) && isset($_SESSION['id'])){
       $_SESSION['loggedin'] = $_SESSION['id'];
       $user_id = $_SESSION['id'];
       $login_type = $_SESSION['login_type'];
 
       if($login_type == "google"){
-        $query = "SELECT * FROM `g_users` WHERE id = $user_id";
+        $query = "SELECT * FROM $table WHERE id = $user_id";
         if($query_run = mysqli_query($mysqli, $query)){
             while($row = mysqli_fetch_assoc($query_run)){
                 $user_firstname = $row['first_name'];
@@ -82,17 +98,19 @@ session_destroy();
                 $user_email = $row['email'];
                 $user_picture = $row['picture'];
                 $user_name = $user_firstname.' '.$user_lastname;
+                $user_phone = $row['phone'];
             }
         } else {
           echo mysqli_error($mysqli);
         }
       } else if($login_type == "facebook"){
-        $query = "SELECT * FROM `fblogin` WHERE id = $user_id";
+        $query = "SELECT * FROM $table WHERE id = $user_id";
         if($query_run = mysqli_query($mysqli, $query)){
             while($row = mysqli_fetch_assoc($query_run)){
                 $user_name = $row['name'];
                 $user_email = $row['email'];
                 $user_picture = $row['image'];
+                $user_phone = $row['phone'];
             }
         } else {
           echo mysqli_error($mysqli);
@@ -100,7 +118,67 @@ session_destroy();
       }
    }
 
- 
+   function update(){
+      global $table;
+      global $mysqli;
+
+      if(isset($table) && isset($_SESSION['user_type']) && isset($_SESSION['loggedin'])){
+        $user_type = $_SESSION['user_type'];
+
+        if($user_type == 'user'){
+          $query1 = "SELECT * FROM $table WHERE `id` = '".$_SESSION['loggedin']."'";
+          if($query1_run = mysqli_query($mysqli, $query1)){
+            while($row = mysqli_fetch_assoc($query1_run)){
+              if(strlen($row['phone']) == 0){
+                return true;
+              } else {
+                return false;
+              }
+            }
+          }
+        } else if ($user_type == 'school'){
+          $query2 = "SELECT * FROM $table WHERE `id` = '".$_SESSION['loggedin']."'";
+          if($query2_run = mysqli_query($mysqli, $query2)){
+            while($row = mysqli_fetch_assoc($query2_run)){
+              if(strlen($row['phone']) == 0 || strlen($row['school_name']) == 0 || strlen($row['address']) == 0 || strlen($row['about']) == 0){
+                return true;
+              } else {
+                return false;
+              }
+            }
+          }
+        }
+      }
+  }
+
+  if(isset($_SESSION['user_type']) && isset($table)){
+    $user_type = $_SESSION['user_type'];
+
+    if($user_type == 'user'){
+      if(isset($_POST['update_phone'])){
+        $user_phone = $_POST['update_phone'];
+
+        $query = "UPDATE $table SET phone = $user_phone WHERE id = '".$_SESSION['loggedin']."'";
+        if(!mysqli_query($mysqli, $query)){
+          echo mysqli_error($mysqli);
+        }
+      }
+    } else if($user_type == 'school'){
+      if(isset($_POST['update_phone']) && isset($_POST['update_school']) && isset($_POST['update_about']) && isset($_POST['update_address'])){
+        $user_phone = $_POST['update_phone'];
+        $user_school = $_POST['update_school'];
+        $user_about = $_POST['update_about'];
+        $user_address = $_POST['update_address'];
+
+        $query = "UPDATE $table SET phone = '$user_phone', school_name = '$user_school', about = '$user_about', address = '$user_address' WHERE id = '".$_SESSION['loggedin']."'";
+        if(!mysqli_query($mysqli, $query)){
+          echo mysqli_error($mysqli);
+        }
+      }
+    }
+  }
+
+   
 ?>
 <!DOCTYPE html>
 <html>
@@ -139,6 +217,7 @@ session_destroy();
             $(document).ready(function (){
                 
                 $('.profile').hide();
+                $('#loginform_details').hide();
                 $('#myDiv').hide();
                 $('.datepicker').pickadate({
                   selectMonths: true, // Creates a dropdown to control month
@@ -322,6 +401,20 @@ session_destroy();
             function closeProfile(){
               $('#profile_modal').hide();
             }
+
+            function showLoginFormDetails(id, type){
+              if(type == 1){
+                $('#loginform_hidden_type').val('user');
+                $('#facebook_btn_link').attr('href','fblogin/index.php?user_type=user');
+                $('#google_btn_link').attr('href','glogin/index.php?user_type=user');
+              } else {
+                $('#loginform_hidden_type').val('d_school');
+                $('#facebook_btn_link').attr('href','fblogin/index.php?user_type=school');
+                $('#google_btn_link').attr('href','glogin/index.php?user_type=school');
+              }
+
+              $(id).show();
+            }
             
         </script>
         
@@ -468,6 +561,7 @@ session_destroy();
               background: white;
               right: 2em;
               box-shadow: 0px 6px 20px 0px rgba(26,20,26,1);
+              z-index: 100;
             }
 
             .profile_image{
@@ -497,6 +591,22 @@ session_destroy();
               font-size: 1.5em;
               top: 10px;
               cursor: pointer;
+            }
+
+            .update_window{
+              position: fixed;
+              top: 14em;
+              left: 42em;
+              width: 30%;
+              z-index: 70;
+              background: white;
+              box-shadow: 0px 6px 20px 0px rgba(26,20,26,1);
+            }
+
+            .update_header{
+              font-size: 2em;
+              margin-bottom: 0px;
+              color: #560848;
             }
 
             @media only screen and (max-width: 768px){
@@ -963,39 +1073,42 @@ session_destroy();
           <div id="modal1" class="modal bottom-sheet grey-gradient-left">
             <div class="modal-content">
                 <div class="row center-align">
-                    <a href="fblogin/"><button class=" modal-action modal-close waves-effect waves-green btn blue darken-4 fb-btn" type="button">FACEBOOK</button></a>
-                    <a href="glogin/"><button class=" modal-action modal-close waves-effect waves-green btn red darken-4 google-btn" type="button">GOOGLE</button></a>
+                    <div class="col m5"></div>
+                    <div class="col m6">
+                        <p style="float: left;margin-right: 2em; font-weight: 400;" onclick="showLoginFormDetails('#loginform_details', 1);">
+                            <input name="group1" value="user" type="radio" id="test15"/>
+                            <label for="test15">As a user</label>
+                        </p>
+                        <p style="float: left; font-weight: 400;" onclick="showLoginFormDetails('#loginform_details', 2);">
+                            <input name="group1" value="d_school" type="radio" id="test16" />
+                            <label for="test16">As a school</label>
+                        </p>
+                    </div>
                 </div>
-                <h5 class="center-align white-text" style="font-weight: 200;">Or</h5>
-                <h4 class="center-align white-text" style="font-weight: 200;">Enter your login details.</h4>
-                <div class="row">
-                    <form class="col s12" action="index.php" method="post">
-                        <div class="row">
-                            <div class="input-field col s12 m6">
-                                <input id="loginemail" type="email" class="validate" name="loginemail" placeholder="Email">
-                            </div>
-                                  
-                            <div class="input-field col s12 m6">
-                                <input id="loginpassword" type="password" class="validate" name="loginpassword" placeholder="Password">
-                            </div>                  
-                        </div>
-                        <div class="row center-align">
-                            <div class="col m5"></div>
-                            <div class="col m6">
-                                <p style="float: left;margin-right: 2em; font-weight: 400;">
-                                    <input name="group1" value="user" type="radio" id="test15" checked="checked" />
-                                    <label for="test15">As a user</label>
-                                </p>
-                                <p style="float: left; font-weight: 400;">
-                                    <input name="group1" value="d_school" type="radio" id="test16" />
-                                    <label for="test16">As a school</label>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row center-align">
-                            <button class=" modal-action modal-close waves-effect waves-green btn login-btn" type="submit" name="loginbtn">Login</button>
-                        </div>
-                    </form>
+                <div id="loginform_details">
+                  <div class="row center-align">
+                      <a href="fblogin/" id="facebook_btn_link"><button class=" modal-action modal-close waves-effect waves-green btn blue darken-4 fb-btn" type="button">FACEBOOK</button></a>
+                      <a href="glogin/" id="google_btn_link"><button class=" modal-action modal-close waves-effect waves-green btn red darken-4 google-btn" type="button">GOOGLE</button></a>
+                  </div>
+                  <h5 class="center-align white-text" style="font-weight: 200;">Or</h5>
+                  <h4 class="center-align white-text" style="font-weight: 200;">Enter your login details.</h4>
+                  <div class="row">
+                      <form class="col s12" action="index.php" method="post">
+                          <input type="hidden" name="group1" value="" id="loginform_hidden_type">
+                          <div class="row">
+                              <div class="input-field col s12 m6">
+                                  <input id="loginemail" type="email" class="validate" name="loginemail" placeholder="Email">
+                              </div>
+                                    
+                              <div class="input-field col s12 m6">
+                                  <input id="loginpassword" type="password" class="validate" name="loginpassword" placeholder="Password">
+                              </div>                  
+                          </div>
+                          <div class="row center-align">
+                              <button class=" modal-action modal-close waves-effect waves-green btn login-btn" type="submit" name="loginbtn">Login</button>
+                          </div>
+                      </form>
+                  </div>
                 </div>
             </div>
         </div>
@@ -1094,7 +1207,7 @@ session_destroy();
                     <i class="fa fa-mobile fa-2x" aria-hidden="true"></i>
                   </div>
                   <div class="col s9">
-                    <p class="profile_mobile">+91 8962737489</p>
+                    <p class="profile_mobile"><?php echo $user_phone; ?></p>
                   </div>
                 </div>
                 <div class="row">
@@ -1114,12 +1227,63 @@ session_destroy();
                   </form>
                 </div>
             </div>
+
+            <!-- update window -->
+
+            <?php if(update()){ ?>
+
+              <div class="update_window">
+                <div class="row center-align" style="margin-bottom: 0px;">
+                  <p class="update_header center-align">UPDATE</p>
+                </div>
+                <form action="index.php" method="post">
+                  <div class="row">
+                    <div class="col s1"></div>
+                    <div class="input-field col s10">
+                      <input id="update_phone" type="text" name="update_phone" class="validate" style="background: transparent;border-bottom: 2px solid;color: #560848;box-shadow: none;width: 97%;">
+                      <label for="update_phone">Phone number</label>
+                    </div>
+                  </div>
+
+                  <?php if($_SESSION['user_type'] == 'school'){ ?>
+
+                    <div class="row">
+                      <div class="col s1"></div>
+                      <div class="input-field col s10">
+                        <input name="update_school" type="text" class="validate" style="background: transparent;border-bottom: 2px solid;color: #560848;box-shadow: none;width: 97%;">
+                        <label for="update_school">School name</label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col s1"></div>
+                      <div class="input-field col s10">
+                        <input name="update_about" type="text" class="validate" style="background: transparent;border-bottom: 2px solid;color: #560848;box-shadow: none;width: 97%;">
+                        <label for="update_about">About</label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col s1"></div>
+                      <div class="input-field col s10">
+                        <input name="update_address" type="text" class="validate" style="background: transparent;border-bottom: 2px solid;color: #560848;box-shadow: none;width: 97%;">
+                        <label for="update_address">Address</label>
+                      </div>
+                    </div>
+
+                  <?php } ?>  
+
+                  <div class="row">
+                    <button class="btn searchBtn right" type="submit" style="margin-right: 15px;">SEND</button>
+                  </div>
+                </form>
+              </div>
             
+            <?php } ?>
+
             <footer>
                 <div class="row" style="margin-bottom: 0;">
                     <div class="col l1 m1"></div>
                     <div class="col s12 m4 l4 footer-p">
-                        <div class="footer-p1"><p>© drivigo 2016.</p></div>
+                        <div class="footer-p1"><p>Â© drivigo 2016.</p></div>
                         <div class="footer-p2"><p>Designed & developed by Sarang Kartikey & Sarfraz Ahmad, exclusively for Drivigo Pvt. Ltd. </p></div>
                     </div>
                 </div>

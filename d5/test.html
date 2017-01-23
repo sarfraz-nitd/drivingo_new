@@ -79,3 +79,12 @@
 
 
 
+$query1 = "SELECT * FROM `fblogin` WHERE  `fbId` = '".$id."' ";
+						if($query1_run = mysqli_query($mysqli, $query1)){
+							if(mysqli_num_rows($query1_run)>=1){
+								while($row = mysqli_fetch_assoc($query1_run)){
+									$_SESSION['id'] = $row['id'];
+									$_SESSION['login_type'] = "facebook";
+								}
+							} 
+						}

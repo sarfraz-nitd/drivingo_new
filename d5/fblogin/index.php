@@ -38,6 +38,11 @@ require_once('../connect.php');
 	//1.Stat Session
 	 session_start();
 
+
+	if(isset($_GET['user_type'])){
+		$_SESSION['user_type'] = $_GET['user_type'];
+	}
+
 	//check if users wants to logout
 	 if(isset($_REQUEST['logout'])){
 	 	unset($_SESSION['fb_token']);
@@ -89,9 +94,17 @@ require_once('../connect.php');
 			$gender = $graph->getProperty('gender');
 			$image = 'https://graph.facebook.com/'.$id.'/picture?width=300';
 			$loggedin  = true;
-			if(insertIntoDb($id, $name, $email, $gender, $image)){
+			$table = "";
+
+			if($_SESSION['user_type'] == 'user'){
+				$table = "fb_users";
+			} else {
+				$table = "fb_schools";
+			}
+
+			if(insertIntoDb($id, $name, $email, $gender, $image, $table)){
 				//echo "<script type='text/javascript'>window.location.href = 'index.php?logout=true';</script>";
-				echo $query1 = "SELECT * FROM `fblogin` WHERE  `fbId` = '".$id."'";
+				$query1 = "SELECT * FROM $table WHERE  `fbId` = '".$id."'";
 						if($query1_run = mysqli_query($mysqli, $query1)){
 							if(mysqli_num_rows($query1_run)>=1){
 								while($row = mysqli_fetch_assoc($query1_run)){
@@ -108,19 +121,19 @@ require_once('../connect.php');
 	}
 	
 	//function to insert data in database
-	function insertIntoDb($id, $name, $email, $gender, $image){
+	function insertIntoDb($id, $name, $email, $gender, $image, $table){
 		global $mysqli;
-		$query = "SELECT * FROM `fblogin` WHERE  `fbId` = '".$id."' ";;
+		$query = "SELECT * FROM $table WHERE  `fbId` = '".$id."' ";;
 		if($query_run = mysqli_query($mysqli, $query)){
 			if(mysqli_num_rows($query_run)>=1){
 				//update
-				$query = "UPDATE `fblogin` SET `name`='".$name."',`email`='".$email."',`gender`='".$gender."',`image`='".$image."' WHERE  `fbId`= '".$id."'";
+				$query = "UPDATE $table SET `name`='".$name."',`email`='".$email."',`gender`='".$gender."',`image`='".$image."' WHERE  `fbId`= '".$id."'";
 				if($query_run = mysqli_query($mysqli, $query)){
 					return true;
 				}
 			}else{
 				//insert
-				$query = "INSERT INTO `fblogin`(`id`, `fbId`, `name`, `email`, `gender`, `image`) VALUES ('','".$id."','".$name."','".$email."','".$gender."','".$image."')";
+				$query = "INSERT INTO $table (`id`, `fbId`, `name`, `email`, `gender`, `image`) VALUES ('','".$id."','".$name."','".$email."','".$gender."','".$image."')";
 				if($query_run = mysqli_query($mysqli, $query)){
 					if(mysqli_affected_rows($mysqli)==1){
 						return true;

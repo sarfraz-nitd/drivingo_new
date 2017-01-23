@@ -3,6 +3,21 @@
 include_once 'gpConfig.php';
 include_once 'User.php';
 
+$table = '';
+
+if(isset($_GET['user_type'])){
+    $user_type = $_GET['user_type'];
+    $_SESSION['user_type'] = $user_type;
+
+    if($user_type == 'user'){
+        $_SESSION['table'] = 'g_users';
+    } else if($user_type == 'school'){
+        $_SESSION['table'] = 'g_schools';
+    }
+}
+
+
+
 if(isset($_GET['code'])){
 	$gClient->authenticate($_GET['code']);
 	$_SESSION['token'] = $gClient->getAccessToken();
@@ -28,10 +43,9 @@ if ($gClient->getAccessToken()) {
         'first_name'    => $gpUserProfile['given_name'],
         'last_name'     => $gpUserProfile['family_name'],
         'email'         => $gpUserProfile['email'],
-        'gender'        => $gpUserProfile['gender'],
         'locale'        => $gpUserProfile['locale'],
         'picture'       => $gpUserProfile['picture'],
-        'link'          => $gpUserProfile['link']
+        'table'         => $_SESSION['table']
     );
     $userData = $user->checkUser($gpUserData);
 	
