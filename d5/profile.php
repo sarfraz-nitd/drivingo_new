@@ -18,6 +18,22 @@
     $schoolId = "";
     $about_owner = "";
     $package_counter = 0;
+    $table = "";
+
+    if(isset($_SESSION['user_type']) && isset($_SESSION['login_type'])){
+        $user_type = $_SESSION['user_type'];
+        $login_type = $_SESSION['login_type'];
+
+        if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'facebook'){
+            $table = "fb_schools";
+          }else if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'google'){
+            $table = "g_schools";
+          }else if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'normal'){
+            $table = "schools";
+          }
+    }
+
+    echo $table;
 
     if(isset($_GET['hash'])){
         $schoolId = $_GET['hash'];
@@ -37,10 +53,10 @@
             echo mysqli_error($mysqli);
         }
 
-        $query1 = "SELECT * FROM profile_school WHERE school_id = $schoolId";
+        $query1 = "SELECT * FROM $table WHERE id = $schoolId";
         if($query1_run = mysqli_query($mysqli, $query1)){
             while($row = mysqli_fetch_assoc($query1_run)){
-                $about_owner = $row['about'];
+                $about_owner = $row['about_owner'];
             }
         } else {
             echo mysqli_error($mysqli);

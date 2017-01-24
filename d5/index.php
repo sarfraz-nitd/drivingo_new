@@ -55,9 +55,12 @@ require_once('connect.php');
                      while($row = mysqli_fetch_assoc($query_run)){
                       $_SESSION['loggedin'] = $row['id'];
                       $_SESSION['type'] = $type;
+                      $_SESSION['user_type'] = $type;
+                      $_SESSION['login_type'] = 'normal';
                       $user_name = $row['name'];
                       $user_email = $row['email'];
                       $user_picture = "img/beautiful.jpg";
+                      $user_phone = $row['phone'];
                     }
                }
           }else{
@@ -70,9 +73,12 @@ require_once('connect.php');
                      while($row = mysqli_fetch_assoc($query_run)){
                       $_SESSION['loggedin'] = $row['id'];
                       $_SESSION['type'] = $type;
+                      $_SESSION['user_type'] = 'school';
+                      $_SESSION['login_type'] = 'normal';
                       $user_name = $row['owners_name'];
                       $user_email = $row['email'];
                       $user_picture = "img/beautiful.jpg";
+                      $user_phone = $row['phone'];
                     }
                }
           }else{
@@ -561,7 +567,7 @@ require_once('connect.php');
               background: white;
               right: 2em;
               box-shadow: 0px 6px 20px 0px rgba(26,20,26,1);
-              z-index: 100;
+              z-index: 102;
             }
 
             .profile_image{
@@ -595,10 +601,10 @@ require_once('connect.php');
 
             .update_window{
               position: fixed;
-              top: 14em;
-              left: 42em;
-              width: 30%;
-              z-index: 70;
+              top: 10%;
+              left: 28%;
+              width: 44%;
+              z-index: 101;
               background: white;
               box-shadow: 0px 6px 20px 0px rgba(26,20,26,1);
             }
@@ -1237,7 +1243,7 @@ require_once('connect.php');
                   <p class="update_header center-align">UPDATE</p>
                 </div>
                 <form action="index.php" method="post">
-                  <div class="row">
+                  <div class="row" style="margin-bottom: 0px;">
                     <div class="col s1"></div>
                     <div class="input-field col s10">
                       <input id="update_phone" type="text" name="update_phone" class="validate" style="background: transparent;border-bottom: 2px solid;color: #560848;box-shadow: none;width: 97%;">
@@ -1247,26 +1253,64 @@ require_once('connect.php');
 
                   <?php if($_SESSION['user_type'] == 'school'){ ?>
 
-                    <div class="row">
+                    <div class="row" style="margin-bottom: 0px;">
                       <div class="col s1"></div>
                       <div class="input-field col s10">
                         <input name="update_school" type="text" class="validate" style="background: transparent;border-bottom: 2px solid;color: #560848;box-shadow: none;width: 97%;">
                         <label for="update_school">School name</label>
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="margin-bottom: 0px;">
                       <div class="col s1"></div>
                       <div class="input-field col s10">
                         <input name="update_about" type="text" class="validate" style="background: transparent;border-bottom: 2px solid;color: #560848;box-shadow: none;width: 97%;">
                         <label for="update_about">About</label>
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row" style="margin-bottom: 0px;">
                       <div class="col s1"></div>
                       <div class="input-field col s10">
                         <input name="update_address" type="text" class="validate" style="background: transparent;border-bottom: 2px solid;color: #560848;box-shadow: none;width: 97%;">
                         <label for="update_address">Address</label>
                       </div>
+                    </div>
+                    <div class="row" style="margin-left: 4em;color:#560848;margin-bottom:0px;">
+                      <div class="col s12 m4 l4">
+              
+                          <p class="service_header" style="color: #560848;margin-left: 0;">Vehicles</p>
+                          <p>
+                            <input type="checkbox" id="test51" name="services[]" value="CARS" />
+                            <label class="checkbox_label" for="test51" style="color:#560848;">CARS</label>
+                          </p>
+                          <p>
+                            <input type="checkbox" id="test61" name="services[]" value="SUVS"/>
+                            <label class="checkbox_label" for="test61" style="color:#560848;">SUVS</label>
+                          </p>
+                          <p>
+                            <input type="checkbox" id="test71" name="services[]" value="TRUCKS"/>
+                            <label class="checkbox_label" for="test71" style="color:#560848;">TRUCKS</label>
+                          </p>          
+
+                      </div>  
+
+                      <div class="col s12 m4 l4">
+              
+                          <p class="service_header" style="color: #560848;margin-left: 0;">Services</p>
+                          <p>
+                            <input type="checkbox" id="test81" name="services[]" value="TRAINING" />
+                            <label class="checkbox_label" for="test81" style="color:#560848;">ONLY TRAINING</label>
+                          </p>
+                          <p>
+                            <input type="checkbox" id="test91" name="services[]" value="LICENSE"/>
+                            <label class="checkbox_label" for="test91" style="color:#560848;">TRAINING + LICENSE</label>
+                          </p>
+                          <p>
+                            <input type="checkbox" id="test101" name="services[]" value="STUNT"/>
+                            <label class="checkbox_label" for="test101" style="color:#560848;">BIKE STUNTS</label>
+                          </p>          
+
+                      </div>
+
                     </div>
 
                   <?php } ?>  

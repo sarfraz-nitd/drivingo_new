@@ -1,17 +1,34 @@
 <?php
 
 	require('connect.php');
+	session_start();
+
+	$table = '';
+	echo $_SESSION['user_type'];
+	echo $_SESSION['login_type'];
+
+	if(isset($_SESSION['user_type']) && isset($_SESSION['login_type'])){
+      if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'facebook'){
+        $table = "fb_schools";
+      }else if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'google'){
+        $table = "g_schools";
+      } else if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'normal'){
+        $table = "schools";
+      }
+    }
+
+    echo $table;
 
 	if(isset($_POST['about'])&&!empty($_POST['about'])&&isset($_POST['schoolId'])){
 		$about = mysqli_real_escape_string($mysqli, $_POST['about']);
 		$schoolId = $_POST['schoolId'];
 
-		$query1 = "SELECT * FROM profile_school WHERE school_id = $schoolId";
+		echo $query1 = "SELECT * FROM $table WHERE id = $schoolId";
 		if($query1_run = mysqli_query($mysqli, $query1)){
 
 			if(mysqli_num_rows($query1_run) > 0){
 
-				$query2 = "UPDATE profile_school SET about = '$about' WHERE school_id = $schoolId";
+				echo $query2 = "UPDATE $table SET about_owner = '$about' WHERE id = $schoolId";
 				if($query2_run = mysqli_query($mysqli, $query2)){
 					echo 'success';
 			
@@ -21,7 +38,7 @@
 					echo mysqli_error($msyqli);
 				}
 
-			} else {
+			} /*else {
 				
 				$query2 = "INSERT INTO profile_school (school_id, about) VALUES($schoolId, '$about')";
 				if($query2_run = mysqli_query($mysqli, $query2)){
@@ -33,7 +50,7 @@
 					echo mysqli_error($mysqli);
 				}
 
-			}
+			}*/
 
 		} else {
 
