@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 24, 2017 at 03:39 AM
+-- Generation Time: Jan 24, 2017 at 08:08 PM
 -- Server version: 10.1.13-MariaDB
 -- PHP Version: 5.5.37
 
@@ -63,16 +63,21 @@ CREATE TABLE `fb_schools` (
   `phone` varchar(20) NOT NULL,
   `school_name` varchar(500) NOT NULL,
   `about` varchar(500) NOT NULL,
-  `address` varchar(500) NOT NULL
+  `address` varchar(500) NOT NULL,
+  `about_owner` varchar(500) NOT NULL,
+  `services` varchar(200) NOT NULL,
+  `lat` float(10,6) NOT NULL,
+  `lng` float(10,6) NOT NULL,
+  `authorized` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `fb_schools`
 --
 
-INSERT INTO `fb_schools` (`id`, `fbId`, `name`, `email`, `gender`, `image`, `phone`, `school_name`, `about`, `address`) VALUES
-(1, '1251165524961462', 'Sarang Kartikey', 'sarangkartikey50@gmail.com', 'male', 'https://graph.facebook.com/1251165524961462/picture?width=300', '7011267805', 'VOL. 1', 'hello world', 'new delhi'),
-(2, '1203816219712229', 'Sarfraz Ahmad', 'sa4420@gmail.com', 'male', 'https://graph.facebook.com/1203816219712229/picture?width=300', '123425', 'nitd', 'nothing to say', 'delhi');
+INSERT INTO `fb_schools` (`id`, `fbId`, `name`, `email`, `gender`, `image`, `phone`, `school_name`, `about`, `address`, `about_owner`, `services`, `lat`, `lng`, `authorized`) VALUES
+(5, '1203816219712229', 'Sarfraz Ahmad', 'sa4420@gmail.com', 'male', 'https://graph.facebook.com/1203816219712229/picture?width=300', '43', 'sdfg', 'sdfg', 'gtb nagar, new delhi', '', 'SUVS/TRAINING/LICENSE', 28.697838, 77.206947, 2),
+(6, '1251165524961462', 'Sarang Kartikey', 'sarangkartikey50@gmail.com', 'male', 'https://graph.facebook.com/1251165524961462/picture?width=300', 'dsga', 'asdg', 'asgd', 'narela, delhi', '', 'SUVS/TRUCKS/TRAINING/LICENSE/STUNT', 28.853960, 77.091782, 2);
 
 -- --------------------------------------------------------
 
@@ -120,16 +125,20 @@ CREATE TABLE `g_schools` (
   `phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `school_name` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
   `about` text COLLATE utf8_unicode_ci NOT NULL,
-  `address` varchar(500) COLLATE utf8_unicode_ci NOT NULL
+  `address` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
+  `about_owner` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
+  `services` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `lat` float(10,6) NOT NULL,
+  `lng` float(10,6) NOT NULL,
+  `authorized` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `g_schools`
 --
 
-INSERT INTO `g_schools` (`id`, `oauth_provider`, `oauth_uid`, `first_name`, `last_name`, `email`, `gender`, `locale`, `picture`, `link`, `created`, `modified`, `phone`, `school_name`, `about`, `address`) VALUES
-(1, 'google', '108403709690928436359', 'Sarang', 'Kartikey', 'sarangkartikey50@gmail.com', 'male', 'en', 'https://lh3.googleusercontent.com/-WKLeZcKOpvg/AAAAAAAAAAI/AAAAAAAAGao/5r95ot8xa7o/photo.jpg', 'https://plus.google.com/108403709690928436359', '2017-01-23 20:16:55', '2017-01-23 20:16:55', '8962636894', 'yo', 'yo', 'agra, uttarpradesh'),
-(2, 'google', '104992405407602986625', 'learn', 'drive', 'learn2drive02@gmail.com', '', 'en', 'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg', '', '2017-01-23 20:36:49', '2017-01-23 20:42:18', '3434', 'dd', 'ww', 'rer');
+INSERT INTO `g_schools` (`id`, `oauth_provider`, `oauth_uid`, `first_name`, `last_name`, `email`, `gender`, `locale`, `picture`, `link`, `created`, `modified`, `phone`, `school_name`, `about`, `address`, `about_owner`, `services`, `lat`, `lng`, `authorized`) VALUES
+(7, 'google', '108403709690928436359', 'Sarang', 'Kartikey', 'sarangkartikey50@gmail.com', '', 'en', 'https://lh3.googleusercontent.com/-WKLeZcKOpvg/AAAAAAAAAAI/AAAAAAAAGao/5r95ot8xa7o/photo.jpg', '', '2017-01-24 19:55:24', '2017-01-24 19:55:24', '6565', 'jjjjjjj', 'jjjjjjjj', 'new delhi', '', 'CARS/TRAINING/LICENSE', 28.613939, 77.209023, 2);
 
 -- --------------------------------------------------------
 
@@ -336,7 +345,7 @@ ALTER TABLE `email_act`
 -- AUTO_INCREMENT for table `fb_schools`
 --
 ALTER TABLE `fb_schools`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `fb_users`
 --
@@ -346,7 +355,7 @@ ALTER TABLE `fb_users`
 -- AUTO_INCREMENT for table `g_schools`
 --
 ALTER TABLE `g_schools`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `g_users`
 --
