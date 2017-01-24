@@ -170,13 +170,24 @@ require_once('connect.php');
         }
       }
     } else if($user_type == 'school'){
-      if(isset($_POST['update_phone']) && isset($_POST['update_school']) && isset($_POST['update_about']) && isset($_POST['update_address'])){
+      if(isset($_POST['update_phone']) && isset($_POST['update_school']) && isset($_POST['update_about']) && isset($_POST['update_address']) && isset($_POST['services'])  && isset($_POST['update_lat']) && isset($_POST['update_lng'])){
         $user_phone = $_POST['update_phone'];
         $user_school = $_POST['update_school'];
         $user_about = $_POST['update_about'];
         $user_address = $_POST['update_address'];
+        $services = $_POST['services'];
+        $lat = $_POST['update_lat'];
+        $lng = $_POST['update_lng'];
+        $user_services = '';
+        if(!empty($services)){
+          $n = count($services);
+          for($i = 0; $i< $n; $i++){
+            if($i==$n-1) $user_services.= $services[$i];
+            else $user_services.= $services[$i].'/';
+          }
+        }
 
-        $query = "UPDATE $table SET phone = '$user_phone', school_name = '$user_school', about = '$user_about', address = '$user_address' WHERE id = '".$_SESSION['loggedin']."'";
+        $query = "UPDATE $table SET phone = '$user_phone', school_name = '$user_school', about = '$user_about', address = '$user_address', services = '$user_services', lat = '$lat', lng = '$lng' WHERE id = '".$_SESSION['loggedin']."'";
         if(!mysqli_query($mysqli, $query)){
           echo mysqli_error($mysqli);
         }
@@ -371,12 +382,12 @@ require_once('connect.php');
                 });
             }
             
-            function verifyAddress(){
-                var schoolAddress = $('#school_address').val();
-                shoolLocation(schoolAddress);
+            function verifyAddress(addressId, btnId, latId, lngId){
+                var schoolAddress = $(addressId).val();
+                shoolLocation(schoolAddress, btnId, latId, lngId);
             }
             
-            function shoolLocation(schoolAddress){
+            function shoolLocation(schoolAddress, btnId, latId, lngId){
                 var geocoder = new google.maps.Geocoder();
 
                 if(schoolAddress.length){
@@ -385,11 +396,11 @@ require_once('connect.php');
                         schoolLat = results[0].geometry.location.lat();
                         schoolLng = results[0].geometry.location.lng();
                         
-                        $('#schoolLat').val(schoolLat);
-                        $('#schoolLng').val(schoolLng);
+                        $(latId).val(schoolLat);
+                        $(lngId).val(schoolLng);
                         
                         
-                        $('#schoolHiddenBtn').click();
+                        $(btnId).click();
                           
                       } else {
                         alert('Unable to fetch the location: ' + status + ' please provide valid address!');
@@ -986,7 +997,7 @@ require_once('connect.php');
                               <input type="hidden" id="schoolLng" name="lng" value="">
             
                               <div class="row center-align">
-                                <input type="button" onclick="verifyAddress();" value="Submit" class="btn btn-large file_btn">  
+                                <input type="button" onclick="verifyAddress('#school_address', '#schoolHiddenBtn','#schoolLat', '#schoolLng');" value="Submit" class="btn btn-large file_btn">  
                               </div>
                                 <input type="submit" id="schoolHiddenBtn" name="reg_d_school" class="hide">
                             </form>
@@ -1270,7 +1281,7 @@ require_once('connect.php');
                     <div class="row" style="margin-bottom: 0px;">
                       <div class="col s1"></div>
                       <div class="input-field col s10">
-                        <input name="update_address" type="text" class="validate" style="background: transparent;border-bottom: 2px solid;color: #560848;box-shadow: none;width: 97%;">
+                        <input name="update_address" id="update_address" type="text" class="validate" style="background: transparent;border-bottom: 2px solid;color: #560848;box-shadow: none;width: 97%;">
                         <label for="update_address">Address</label>
                       </div>
                     </div>
@@ -1312,11 +1323,14 @@ require_once('connect.php');
                       </div>
 
                     </div>
+                    <input type="hidden" value="" id="updateLat"  name="update_lat">
+                    <input type="hidden" value="" id="updateLng" name="update_lng">
 
                   <?php } ?>  
 
                   <div class="row">
-                    <button class="btn searchBtn right" type="submit" style="margin-right: 15px;">SEND</button>
+                    <button class="btn searchBtn right" type="button" onclick="verifyAddress('#update_address', '#updateHiddenBtn','#updateLat', '#updateLng');" style="margin-right: 15px;">SAVE</button>
+                    <input id="updateHiddenBtn" type="submit" class="hide" value="send">
                   </div>
                 </form>
               </div>

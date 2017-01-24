@@ -133,7 +133,7 @@ require_once('../connect.php');
 				}
 			}else{
 				//insert
-				$query = "INSERT INTO $table (`id`, `fbId`, `name`, `email`, `gender`, `image`) VALUES ('','".$id."','".$name."','".$email."','".$gender."','".$image."')";
+				$query = "INSERT INTO $table (`id`, `fbId`, `name`, `email`, `gender`, `image`, `authorized`) VALUES ('','".$id."','".$name."','".$email."','".$gender."','".$image."', '1')";
 				if($query_run = mysqli_query($mysqli, $query)){
 					if(mysqli_affected_rows($mysqli)==1){
 						return true;

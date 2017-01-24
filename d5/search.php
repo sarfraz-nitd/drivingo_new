@@ -356,13 +356,13 @@
                                 '<div class="col s12 m12 l6">' +
                                     '<div class="card card-position sticky-action">' +
                                         '<div class="card-image waves-effect waves-block waves-light">' +
-                                          '<img class="activator" src="' + 'uploads/' + result[i].getAttribute("email") + '/cover_photo.jpg' +'">' +
+                                          '<img class="activator" src="' + result[i].getAttribute("picture") +'">' +
                                         '</div>' +
                                         '<div class="card-content">' +
                                           '<span class="card-title activator grey-text text-darken-4">' + result[i].getAttribute("schools_name") + '<i class="material-icons right">more_vert</i></span>' +
                                         '</div>' +
                                         '<div class="card-action">' +
-                                            '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
+                                            '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ', \'' + result[i].getAttribute("table") + '\')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
                                             '<a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>' +
                                         '</div>' +
                                         '<div class="card-reveal">' +
@@ -388,13 +388,13 @@
                                 '<div class="col s12 m12 l6">' +
                                     '<div class="card card-position sticky-action">' +
                                         '<div class="card-image waves-effect waves-block waves-light">' +
-                                          '<img class="activator" src="' + 'uploads/' + result[i+1].getAttribute("email") + '/cover_photo.jpg' +'">' +
+                                          '<img class="activator" src="' + result[i+1].getAttribute("picture") +'">' +
                                         '</div>' +
                                         '<div class="card-content">' +
                                           '<span class="card-title activator grey-text text-darken-4">' + result[i+1].getAttribute("schools_name") + '<i class="material-icons right">more_vert</i></span>' +
                                         '</div>' +
                                         '<div class="card-action">' +
-                                            '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i+1].getAttribute("id") + ')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
+                                            '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i+1].getAttribute("id") + ', \'' + result[i+1].getAttribute("table") + '\')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
                                             
                                             '<a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>' +
                                         '</div>' +
@@ -429,13 +429,13 @@
                                 '<div class="col s12 m12 l6">' +
                                     '<div class="card card-position sticky-action">' +
                                         '<div class="card-image waves-effect waves-block waves-light">' +
-                                          '<img class="activator" src="' + 'uploads/' + result[i].getAttribute("email") + '/cover_photo.jpg' +'">' +
+                                          '<img class="activator" src="' + '' + result[i].getAttribute("picture") +'">' +
                                         '</div>' +
                                         '<div class="card-content">' +
                                           '<span class="card-title activator grey-text text-darken-4">' + result[i].getAttribute("schools_name") + '<i class="material-icons right">more_vert</i></span>' +
                                         '</div>' +
                                         '<div class="card-action">' +
-                                            '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
+                                            '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ', \'' + result[i].getAttribute("table") + '\')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
                                             
                                             '<a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>' +
                                         '</div>' +
@@ -462,13 +462,13 @@
                                 '<div class="col s12 m12 l6">' +
                                     '<div class="card card-position sticky-action">' +
                                         '<div class="card-image waves-effect waves-block waves-light">' +
-                                          '<img class="activator" src="' + 'uploads/' + result[i+1].getAttribute("email") + '/cover_photo.jpg' +'">' +
+                                          '<img class="activator" src="' + result[i+1].getAttribute("picture") +'">' +
                                         '</div>' +
                                         '<div class="card-content">' +
                                           '<span class="card-title activator grey-text text-darken-4">' + result[i+1].getAttribute("schools_name") + '<i class="material-icons right">more_vert</i></span>' +
                                         '</div>' +
                                         '<div class="card-action">' +
-                                            '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i+1].getAttribute("id") + ')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
+                                            '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i+1].getAttribute("id") + ', \'' + result[i+1].getAttribute("table") + '\')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
                                             
                                             '<a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>' +
                                         '</div>' +
@@ -501,13 +501,13 @@
                                 '<div class="col s12 m12 l6">' +
                                     '<div class="card card-position sticky-action">' +
                                         '<div class="card-image waves-effect waves-block waves-light">' +
-                                          '<img class="activator" src="' + 'uploads/' + result[i].getAttribute("email") + '/cover_photo.jpg' +'">' +
+                                          '<img class="activator" src="' + result[i].getAttribute("picture") +'">' +
                                         '</div>' +
                                         '<div class="card-content">' +
                                           '<span class="card-title activator grey-text text-darken-4">' + result[i].getAttribute("schools_name") + '<i class="material-icons right">more_vert</i></span>' +
                                         '</div>' +
                                         '<div class="card-action">' +
-                                            '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
+                                            '<button class="btn btn-md btn-subscribe" onclick="subscribe(' + result[i].getAttribute("id") + ', \'' + result[i].getAttribute("table") + '\')">subscribe</button>&nbsp;&nbsp;&nbsp;' +
                                             
                                             '<a href="" style="color: #2C204A;" class="direction-icon"><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i></a>' +
                                         '</div>' +
@@ -539,8 +539,14 @@
             
         }
 
-        function subscribe(id){
+        function subscribe(id, table){
            $('#schoolId').val(id);
+           if(table == 'schools')
+            $('#table_name').val('1');
+           else if(table == 'g_schools')
+            $('#table_name').val('2');
+           else if(table == 'fb_schools')
+            $('#table_name').val('3');
            $('#subscribe_form').submit();
         }
     
@@ -558,6 +564,7 @@
 
     <form action="profile.php" id="subscribe_form" method="get">
       <input type="hidden" name="hash" id="schoolId" value="" />
+      <input type="hidden" name="tb" id="table_name" value="">
     </form>
 
     <!-- Navigation

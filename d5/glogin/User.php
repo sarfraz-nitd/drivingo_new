@@ -33,7 +33,7 @@ class User {
                 $update = $this->db->query($query);
             }else{
                 //Insert user data
-                $query = "INSERT INTO ".$table." SET oauth_provider = '".$userData['oauth_provider']."', oauth_uid = '".$userData['oauth_uid']."', first_name = '".$userData['first_name']."', last_name = '".$userData['last_name']."', email = '".$userData['email']."',  locale = '".$userData['locale']."', picture = '".$userData['picture']."',  created = '".date("Y-m-d H:i:s")."', modified = '".date("Y-m-d H:i:s")."'";
+                $query = "INSERT INTO ".$table." SET oauth_provider = '".$userData['oauth_provider']."', oauth_uid = '".$userData['oauth_uid']."', first_name = '".$userData['first_name']."', last_name = '".$userData['last_name']."', email = '".$userData['email']."',  locale = '".$userData['locale']."', picture = '".$userData['picture']."',  created = '".date("Y-m-d H:i:s")."', modified = '".date("Y-m-d H:i:s")."', authorized = '1'";
                 $insert = $this->db->query($query);
             }
             
