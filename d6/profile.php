@@ -19,16 +19,38 @@
     $about_owner = "";
     $package_counter = 0;
     $table = "";
+    $tb = "";
 
-    if(isset($_SESSION['user_type']) && isset($_SESSION['login_type'])){
-        $user_type = $_SESSION['user_type'];
-        $login_type = $_SESSION['login_type'];
+    /* user details */
 
-        if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'facebook'){
+    $user_name = "";
+    $user_email = "";
+    $user_phone = "";
+    $user_id = "";    
+
+    if(isset($_SESSION['loggedin'])){
+        $user_table = ret_user_table($_SESSION['login_type']);
+        $user_id = $_SESSION['loggedin'];
+        $query = "SELECT * FROM $user_table WHERE id = $user_id";
+        if($query_run = mysqli_query($mysqli, $query)){
+            while($row = mysqli_fetch_assoc($query_run)){
+                $user_name = $row['name'];
+                $user_email = $row['email'];
+                $user_phone = $row['phone'];
+            }
+        } else {
+            echo mysqli_error($mysqli);
+        }
+    }
+
+    if(isset($_GET['tb'])){
+        $tb = $_GET['tb'];
+
+        if($tb == 3){
             $table = "fb_schools";
-          }else if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'google'){
+          }else if($tb == 2){
             $table = "g_schools";
-          }else if($_SESSION['user_type'] == 'school' && $_SESSION['login_type'] == 'normal'){
+          }else if($tb == 1){
             $table = "schools";
           }
     }
@@ -38,7 +60,7 @@
     if(isset($_GET['hash'])){
         $schoolId = $_GET['hash'];
 
-        $query = "SELECT * FROM $table WHERE id = $schoolId";
+        $query = "SELECT * FROM schools WHERE id = $schoolId";
         if($query_run = mysqli_query($mysqli, $query)){
             while($row = mysqli_fetch_assoc($query_run)){
                 $owners_name = $row['owners_name'];
@@ -89,6 +111,18 @@
         return $flag;
     }
 
+
+    function ret_user_table($lg_type){
+        $user_table = "";
+        if($lg_type == "normal"){
+            $user_table = "users";
+        } else if($lg_type == "facebook"){
+            $user_table = "fb_users";
+        } else if($lg_type == "google"){
+            $user_table = "g_users";
+        }
+        return $user_table;
+    }
     
 
 ?>
@@ -767,19 +801,30 @@
                     
 
                     <?php for($i=0; $i < $package_counter; $i++){ ?>
-
-                        <div class="columns">
-                          <ul class="price">
-                            <li class="header gradient"><?php echo $package_name[$i]; ?></li>
-                            <li class="grey"><?php echo 'Rs.'.$price[$i]; ?></li>
-                            <?php
-                                if(strlen($detail_one[$i]) > 0) echo '<li>'.$detail_one[$i].'</li>';
-                                if(strlen($detail_two[$i]) > 0) echo '<li>'.$detail_two[$i].'</li>';
-                                if(strlen($detail_three[$i]) > 0) echo '<li>'.$detail_three[$i].'</li>';
-                             ?>
-                            <li class="grey"><a href="#" class="button gradient">Purchase</a>&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-flat" onclick="removePackage('<?php echo $package_id[$i]; ?>')">Remove</a></li>
-                          </ul>
-                        </div>
+                        <form action="payment/user_payment/request.php" method="post">
+                            <div class="columns">
+                              <ul class="price">
+                                <li class="header gradient"><?php echo $package_name[$i]; ?></li>
+                                <li class="grey"><?php echo 'Rs.'.$price[$i]; ?></li>
+                                <?php
+                                    if(strlen($detail_one[$i]) > 0) echo '<li>'.$detail_one[$i].'</li>';
+                                    if(strlen($detail_two[$i]) > 0) echo '<li>'.$detail_two[$i].'</li>';
+                                    if(strlen($detail_three[$i]) > 0) echo '<li>'.$detail_three[$i].'</li>';
+                                 ?>
+                                <li class="grey"><a href="#" class="button gradient"><input type="submit" value="Purchase"></a>&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-flat" onclick="removePackage('<?php echo $package_id[$i]; ?>')">Remove</a></li>
+                              </ul>
+                            </div>
+                            <input type="hidden" name="name" value="<?php echo $user_name; ?>">
+                            <input type="hidden" name="email" value="<?php echo $user_email; ?>">
+                            <input type="hidden" name="phone" value="<?php echo $user_phone; ?>">
+                            <input type="hidden" name="purpose" value="<?php echo $package_name[$i]; ?>">
+                            <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                            <input type="hidden" name="school_id" value="<?php echo $schoolId; ?>">
+                            <input type="hidden" name="package_id" value="<?php echo $package_id[$i]; ?>">
+                            <input type="hidden" name="amount" value="<?php echo $price[$i]; ?>">
+                            <input type="hidden" name="tb" value="<?php echo $tb; ?>">
+                            
+                        </form>
 
                     <?php } ?>
 
