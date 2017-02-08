@@ -13,6 +13,7 @@
     $dom = new DOMDocument("1.0");
     $node = $dom->createElement("markers");
     $parnode = $dom->appendChild($node);
+    $mysqli="";
 
     if (!@($mysqli = new mysqli("localhost", "root", "", "drivingo"))||$mysqli->connect_errno) {
     echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
@@ -80,6 +81,7 @@ else
         $newnode->setAttribute("owners_name", $row['owners_name']);
         $newnode->setAttribute("picture", "uploads/".$row['email']."/cover_photo.jpg");
         $newnode->setAttribute("table", "schools");
+        $newnode->setAttribute("price", getPrice($row['id'], 'packages'));
 
       }
     }
@@ -101,9 +103,9 @@ else
         $newnode->setAttribute("lng", $row['lng']);
         $newnode->setAttribute("distance", $row['distance']);
         $newnode->setAttribute("owners_name", $row['first_name'].' '.$row['last_name']);
-        $newnode->setAttribute("picture", $row['picture']);
+        $newnode->setAttribute("picture", "uploads/".$row['email']."/cover_photo.jpg");
         $newnode->setAttribute("table", "g_schools");
-
+        $newnode->setAttribute("price", getPrice($row['id'], 'packages'));
       }
     }
 
@@ -124,11 +126,27 @@ else
         $newnode->setAttribute("lng", $row['lng']);
         $newnode->setAttribute("distance", $row['distance']);
         $newnode->setAttribute("owners_name", $row['name']);
-        $newnode->setAttribute("picture", $row['image']);
+        $newnode->setAttribute("picture", "uploads/".$row['email']."/cover_photo.jpg");
         $newnode->setAttribute("table", "fb_schools");
-
+        $newnode->setAttribute("price", getPrice($row['id'], 'packages'));
       }
     }
 
     echo $dom->saveXML();
+    
+    function getPrice($id, $table){
+        global $mysqli;
+        $query = "SELECT min(`price`) AS `min_price` FROM $table GROUP BY `school_id` having `school_id` = $id";
+        if($query_run = mysqli_query($mysqli, $query)){
+            if(mysqli_num_rows($query_run) > 0){
+                while($row = mysqli_fetch_assoc($query_run)){
+                    return $row['min_price'];
+                }
+            } else {
+                return -1;
+            }
+        } else {
+            return mysqli_error($mysqli);
+        }
+    }
 ?>

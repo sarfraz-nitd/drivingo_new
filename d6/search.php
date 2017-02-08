@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>Near connaught place</title>
+    <title>Drivingo, version 1.0</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
@@ -25,7 +25,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="materialize/js/materialize.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJh5axYNsWa63hSjco7pySOpX-IJsZ7SM" type="text/javascript"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJh5axYNsWa63hSjco7pySOpX-IJsZ7SM&libraries=places" type="text/javascript"></script>
       
     <script>
         
@@ -36,12 +36,16 @@
         var service = '<?php echo $service; ?>';
         var curLatLng,curAddress;
         var map;
-        var markers = [], markerNodes = [];
+        var markers = [], markerNodes = [], filterType = [], filter_items = [];
         var infoWindow;
+        
 
         
         
         $(document).ready(function() {
+
+            
+
             $(".review").hide();
             $('.mobile-nav-bar').hide();
             $('ul.tabs').tabs();
@@ -186,7 +190,7 @@
                   parseFloat(markerNodes[i].getAttribute("lat")),
                   parseFloat(markerNodes[i].getAttribute("lng")));
 
-             createMarker(latlng, schools_name, email, phone, services, address, distance, "");
+             createMarker(latlng, schools_name, services, address, distance, "");
              bounds.extend(latlng);
            }
              
@@ -200,10 +204,10 @@
           });
         }
         
-        function createMarker(latlng, schools_name, email, phone, services, address, distance, image) {
+        function createMarker(latlng, schools_name, services, address, distance, image) {
            
           if(schools_name != "Your location"){
-              var html = "<div style='color: black;'><b>" + schools_name + "</b> <br/>" + address + "<br/>" + email + "<br/>" + phone + "<br/>" + services + "<br/> <b> distance : " + distance + " KM</div><br/><a onclick='getDirections(\""+ latlng.lat() + "\",\"" + latlng.lng() +"\")' style='color: blue;cursor: pointer;'>Get directions</a>";
+              var html = "<div style='color: black;'><b>" + schools_name + "</b> <br/>" + address + "<br/>" + services + "<br/> <b> distance : " + distance + " KM</div><br/><a onclick='getDirections(\""+ latlng.lat() + "\",\"" + latlng.lng() +"\")' style='color: blue;cursor: pointer;'>Get directions</a>";
           } else {
               var html = "<div style='color: black;'><b>" + schools_name + "</b> <br/>" + address + "<br/></div>";
           }
@@ -277,13 +281,21 @@
         
         function sortBy(flag){
             
-            var k = 0, sort = [];
+            var k = 0, sort = [], schools_temp = [];
+
+            if(filter_items.length > 0){  
+                schools_temp = filter_items;
+            } else {
+                schools_temp = markerNodes;
+            }
+
+
             
             if(flag == 1){  // 1 for BIKES
                 
-                for(var i=0;i<markerNodes.length;i++){
-                    if(markerNodes[i].getAttribute('services').search('BIKES') != -1){
-                        sort[k++] = markerNodes[i];
+                for(var i=0;i<schools_temp.length;i++){
+                    if(schools_temp[i].getAttribute('services').search('BIKES') != -1){
+                        sort[k++] = schools_temp[i];
                     }
                 }
                 
@@ -291,34 +303,34 @@
                 
             } else if(flag == 2){ // 2 for CARS/SUVS
                 
-                for(var i=0;i<markerNodes.length;i++){
-                    if(markerNodes[i].getAttribute('services').search('CARS') != -1 || markerNodes[i].getAttribute('services').search('SUVS') != -1){
-                        sort[k++] = markerNodes[i];
+                for(var i=0;i<schools_temp.length;i++){
+                    if(schools_temp[i].getAttribute('services').search('CARS') != -1 || schools_temp[i].getAttribute('services').search('SUVS') != -1){
+                        sort[k++] = schools_temp[i];
                     }
                 }
                 
                 displayCards(sort);
             } else if(flag == 3){ // 3 for training
 
-              for(var i=0;i<markerNodes.length;i++){
-                    if(markerNodes[i].getAttribute('services').search('TRAINING') != -1){
-                        sort[k++] = markerNodes[i];
+              for(var i=0;i<schools_temp.length;i++){
+                    if(schools_temp[i].getAttribute('services').search('TRAINING') != -1){
+                        sort[k++] = schools_temp[i];
                     }
               }
 
             } else if(flag == 4){ // 4 for license
 
-              for(var i=0;i<markerNodes.length;i++){
-                    if(markerNodes[i].getAttribute('services').search('LICENSE') != -1){
-                        sort[k++] = markerNodes[i];
+              for(var i=0;i<schools_temp.length;i++){
+                    if(schools_temp[i].getAttribute('services').search('LICENSE') != -1){
+                        sort[k++] = schools_temp[i];
                     }
               }
 
             } else if(flag == 5){ // 5 for stunt
 
-              for(var i=0;i<markerNodes.length;i++){
-                    if(markerNodes[i].getAttribute('services').search('STUNT') != -1){
-                        sort[k++] = markerNodes[i];
+              for(var i=0;i<schools_temp.length;i++){
+                    if(schools_temp[i].getAttribute('services').search('STUNT') != -1){
+                        sort[k++] = schools_temp[i];
                     }
               }
 
@@ -335,7 +347,7 @@
                 var k = result.length;
                 var str = "";
 
-                if(k%2 == 0){
+                if(k%2 == 0 && k!=0){
 
 
                     for(i=0;i<k;i+=2){
@@ -373,14 +385,10 @@
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("address") + '</p>' +
                                               '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">DISTANCE</p>' +
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + Math.ceil(parseFloat(result[i].getAttribute("distance"))) + ' KM' + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">OWNER</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("owners_name") + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">EMAIL</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("email") + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">PHONE</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("phone") + '</p>' +
+                                              
                                               '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">SERVICES</p>' +
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("services") + '</p>' +
+                                      
                                           '</div>' +
                                         '</div>' +
                                       '</div>' +
@@ -406,21 +414,17 @@
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i+1].getAttribute("address") + '</p>' +
                                               '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">DISTANCE</p>' +
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + Math.ceil(parseFloat(result[i+1].getAttribute("distance"))) + ' KM' + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">OWNER</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i+1].getAttribute("owners_name") + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">EMAIL</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i+1].getAttribute("email") + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">PHONE</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i+1].getAttribute("phone") + '</p>' +
+                                              
                                               '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">SERVICES</p>' +
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i+1].getAttribute("services") + '</p>' + 
+                                              
                                           '</div>' +
                                         '</div>' +
                                       '</div>' +
                                 '</div>' +
                             '</div>';
                     }
-                } else {
+                } else if(k%2==1  && k!=0){
                     for(i=0; i< k-1; i+=2){
 
                          str = str +
@@ -447,14 +451,10 @@
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("address") + '</p>' +
                                               '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">DISTANCE</p>' +
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + Math.ceil(parseFloat(result[i].getAttribute("distance"))) + ' KM' + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">OWNER</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("owners_name") + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">EMAIL</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("email") + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">PHONE</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("phone") + '</p>' +
+                                              
                                               '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">SERVICES</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("services") + '</p>' + 
+                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("services") + '</p>' +
+                                              
                                           '</div>' +
                                         '</div>' +
                                       '</div>' +
@@ -480,14 +480,10 @@
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i+1].getAttribute("address") + '</p>' +
                                               '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">DISTANCE</p>' +
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + Math.ceil(parseFloat(result[i+1].getAttribute("distance"))) + ' KM' + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">OWNER</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i+1].getAttribute("owners_name") + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">EMAIL</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i+1].getAttribute("email") + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">PHONE</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i+1].getAttribute("phone") + '</p>' +
+                                              
                                               '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">SERVICES</p>' +
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i+1].getAttribute("services") + '</p>' +
+                                              
                                           '</div>' +
                                         '</div>' +
                                       '</div>' +
@@ -519,22 +515,27 @@
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("address") + '</p>' +
                                               '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">DISTANCE</p>' +
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + Math.ceil(parseFloat(result[i].getAttribute("distance"))) + ' KM' + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">OWNER</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("owners_name") + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">EMAIL</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("email") + '</p>' +
-                                              '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">PHONE</p>' +
-                                              '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("phone") + '</p>' +
+                                              
                                               '<p style="color: #EE6F78; font-size: 1.2em; font-weight: 400;">SERVICES</p>' +
                                               '<p style="color: black;font-size: 1em; font-weight: 300">' + result[i].getAttribute("services") + '</p>' + 
+                                              
                                           '</div>' +
                                         '</div>' +
                                       '</div>' +
                                 '</div>' +
                             '</div>';
+                } else {
+                  str = '<div class="row noshools_box">' +
+                          '<div class="col s12">' +
+                            '<p class="no_schools center-align">No schools found!</div>' +
+                          '</div>' +
+                        '</div>';
+
+
                 }
 
                  $('#cards-wrapper').html(str);
+                 $('#nlocation').text(k);
             
             
         }
@@ -549,12 +550,113 @@
             $('#table_name').val('3');
            $('#subscribe_form').submit();
         }
+
+        function filterBy(id, type, value){
+          
+          if(id == "price_slider"){
+              filterType[value] = true;
+          } else if(type == 'facility'){
+              filterType[value] = true;
+          }
+
+          filter(type, value);
+        }
+
+        function filter(type, value){
+          var k = 0;
+
+          filter_items = [];
+          
+          if(filterType[value] == true && type != 'facility'){
+            for(var i=0;i<markerNodes.length;i++){
+                if(markerNodes[i].getAttribute(type) != -1 && markerNodes[i].getAttribute(type) < value){
+                    filter_items[k++] = markerNodes[i];
+                }
+            }
+            displayCards(filter_items);
+          } else if(filterType[value] == true && type == 'facility'){
+            for(var i=0;i<markerNodes.length;i++){
+                if(markerNodes[i].getAttribute('services').search(value) != -1){
+                    filter_items[k++] = markerNodes[i];
+                }
+            }
+            displayCards(filter_items);
+          }
+        }
+
+        function suggest(id){
+
+
+              var input = document.getElementById(id);
+
+              var autocomplete = new google.maps.places.Autocomplete(input);  
+
+              autocomplete.addListener('place_changed', function() {
+                var place = autocomplete.getPlace();
+                if (!place.geometry) {
+                  // User entered the name of a Place that was not suggested and
+                  // pressed the Enter key, or the Place Details request failed.
+                  window.alert("No details available for input: '" + place.name + "'");
+                  return;
+                }
+
+                var address = '';
+                if (place.address_components) {
+                  address = [
+                    (place.address_components[0] && place.address_components[0].short_name || ''),
+                    (place.address_components[1] && place.address_components[1].short_name || ''),
+                    (place.address_components[2] && place.address_components[2].short_name || '')
+                  ].join(' ');
+                }
+
+                getCoordinates(input.value);
+                
+              });
+            }
     
         
     </script>
       
     <style>
-        
+        .no_schools{
+          margin-top: 5em;
+          font-size: 2em;
+          font-weight: 300;
+          color: #ee6e73;
+        }
+
+        .noshools_box{
+          width: 98%;
+          height: 325px;
+          background: white;
+          box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+          margin-top: 9px;
+          border-radius: 3px;
+          border-bottom-width: 10px;
+          border-bottom-style: solid;
+          color: #ee6e73;
+        }
+
+        @media only screen and (max-width: 768px){
+          .noshools_box {
+              width: 98%;
+              height: 210px;
+              background: white;
+              box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+              margin-top: 9px;
+              border-radius: 3px;
+              border-bottom-width: 10px;
+              border-bottom-style: solid;
+              color: #ee6e73;
+          }
+
+          .no_schools {
+              margin-top: 3em;
+              font-size: 2em;
+              font-weight: 300;
+              color: #ee6e73;
+          }
+        }
     </style>
   </head>
 
@@ -599,7 +701,7 @@
         <div class="row" style="position: relative;top: -50px;">
             <div class="col s1 m2"></div>
             <div class="col s10 m6">
-                    <input type="text" id="address" placeholder="Try other location..."/>
+                    <input type="text" onkeydown="suggest('address');" id="address" placeholder="Try other location..."/>
             </div>  
             <div class="row hide-on-med-and-up"></div>
             <div class="col s1 m2 hide-on-med-and-up"></div>
@@ -681,9 +783,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col m4">
+            <div class="col m4 s12">
                 <div class="main-section-side-panel" id="filters">
-                    <div class="row">
+                    <!--div class="row">
                         <p class="filter-header">Location</p>
                         <div class="col s11">
                                 <input style="border: 2px solid #ee6e73;color: #ee6e73;" type="text" id="inputName" placeholder="Search in Delhi"/>
@@ -706,48 +808,64 @@
                                 <label for="test8">Malviya Nagar</label>
                             </p>
                         </div>
-                    </div>
+                    </div-->
                     <div class="row">
                         <p class="filter-header">Prices</p>
                         <div class="col s11" style="font-size: 5px;">
-                            <p>
-                              <input type="checkbox" id="test9" />
+                            <!--p>
+                              <input type="checkbox" id="test9" onclick="filterBy('test9', 'price', '2000');" />
                               <label for="test9">2000</label>
                             </p>
                             <p>
-                              <input type="checkbox" id="test10" checked="checked" />
+                              <input type="checkbox" id="test10" onclick="filterBy('test10', 'price', '4000');"/>
                               <label for="test10">4000</label>
                             </p>
                             <p>
-                              <input type="checkbox" id="test11" />
+                              <input type="checkbox" id="test11" onclick="filterBy('test11', 'price', '6000');" />
                               <label for="test11">6000</label>
+                            </p-->
+                            <p class="range-field">
+                              <input type="range" id="price_slider" min="0" max="10000" onchange="filterBy('price_slider', 'price', this.value);" />
                             </p>
                         </div>
                     </div>
                     <div class="row">
                         <p class="filter-header">Facilities</p>
                         <div class="col s11" style="font-size: 5px;">
-                            <p>
-                              <input type="checkbox" id="test19" />
-                              <label for="test19">Transport vehicle</label>
+                            <!--p>
+                              <input type="checkbox" id="test19" onclick="filterBy('test19', 'facility', 'TRUCKS');" />
+                              <label for="test19">Trucks</label>
                             </p>
                             <p>
-                              <input type="checkbox" id="test12" checked="checked" />
+                              <input type="checkbox" id="test12" onclick="filterBy('test12', 'facility', 'SUV');" />
                               <label for="test12">SUV</label>
                             </p>
                             <p>
-                              <input type="checkbox" id="test13" />
+                              <input type="checkbox" id="test13" onclick="filterBy('test13', 'facility', 'CAR');"  />
                               <label for="test13">Cars</label>
                             </p>
                             <p>
-                              <input type="checkbox" id="test14" />
+                              <input type="checkbox" id="test14" onclick="filterBy('test14', 'facility', 'SCHOOL_VEHICLE');"  />
                               <label for="test14">school provides vehicle</label>
+                            </p-->
+
+                            <p>
+                              <input name="group2" type="radio" id="test25" onclick="filterBy('test25', 'facility', 'TRUCKS');" />
+                              <label for="test25">Trucks</label>
                             </p>
-                        </div>1
+                            <p>
+                              <input name="group2" type="radio" id="test26" onclick="filterBy('test26', 'facility', 'SUV');" />
+                              <label for="test26">SUV</label>
+                            </p>
+                            <p>
+                              <input name="group2" type="radio" id="test227" onclick="filterBy('test227', 'facility', 'CARS');"  />
+                              <label for="test227">Cars</label>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col m8" id="cards-wrapper" style="color: black;">
+            <div class="col m8 s12" id="cards-wrapper" style="color: black;">
                 
             </div>
         </div>
