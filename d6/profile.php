@@ -254,6 +254,7 @@
         <script>
             $(document).ready(function(){
 
+                
                 var comment_input = document.getElementById('comment_input');
                 comment_input.addEventListener('keydown', function(event){
                     if(event.keyCode == 13){
@@ -340,6 +341,16 @@
                 $('#package_id').val(pid);
                 $('#package_school_id').val(<?php echo $schoolId; ?>);
                 $('#package_remove_form').submit();
+            }
+
+            function openPurchaseModal(name, price){
+                $('#pay_detail_package_name').text(name);
+                $('#pay_detail_package_price').text(price);
+                $('#detail_modal').openModal('open');
+            }
+
+            function pay(){
+                $('#payment_form').submit();
             }
         </script>
         
@@ -651,6 +662,15 @@
 
             .comment_time{
                 font-size: 1.1em;
+            }
+
+            .pay_window{
+                font-size: 2em;
+                font-weight: 300;
+            }
+
+            .pay_window_header{
+                font-size: 3em;
             }
 
             @media screen and (max-width: 768px){
@@ -994,7 +1014,7 @@
                     
 
                     <?php for($i=0; $i < $package_counter; $i++){ ?>
-                        <form action="payment/user_payment/request.php" method="post">
+                        <form action="payment/user_payment/request.php" id="payment_form" method="post">
                             <div class="columns">
                               <ul class="price">
                                 <li class="header gradient"><?php echo $package_name[$i]; ?></li>
@@ -1004,7 +1024,7 @@
                                     if(strlen($detail_two[$i]) > 0) echo '<li>'.$detail_two[$i].'</li>';
                                     if(strlen($detail_three[$i]) > 0) echo '<li>'.$detail_three[$i].'</li>';
                                  ?>
-                                <li class="grey"><input type="submit" class="button gradient" value="Purchase">&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-flat" onclick="removePackage('<?php echo $package_id[$i]; ?>')">Remove</a></li>
+                                <li class="grey"><input type="button" onclick="openPurchaseModal('<?php echo $package_name[$i]; ?>', '<?php echo $price[$i]; ?>');" class="button gradient" value="Purchase">&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-flat" onclick="removePackage('<?php echo $package_id[$i]; ?>')">Remove</a></li>
                               </ul>
                             </div>
                             <input type="hidden" name="name" value="<?php echo $user_name; ?>">
@@ -1200,6 +1220,51 @@
                 </div>
             </form>
           </div>
+
+          <!-- detail modal Structure -->
+
+        <div id="detail_modal" class="modal modal-fixed-footer">
+          <div class="modal-content">
+            <h4 class="center-align pay_window_header">Proceed to pay</h4>
+            
+            <div class="row pay_window">
+                <div class="row">
+                    <div class=" col m1"></div>
+                    <div class="col s12 m5">
+                        <p class="pay_detail_name">Name : <?php echo $user_name; ?></p>
+                    </div>
+                    <div class="col s12 m5">
+                        <p class="pay_detail_phone">Phone : <?php echo $user_phone; ?></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col m1"></div>
+                    <div class="col s12 m11">
+                        <p class="pay_detail_email">Email : <?php echo $user_email; ?></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col m1"></div>
+                    <div class="col s12 m6">
+                        <p class="pay_detail_school">School : <b class="pay_detail_school_name"><?php echo $schools_name; ?></b></p>
+                    </div>
+                    <div class="col s12 m5">
+                        <p class="pay_detail_service">Pay for <b id="pay_detail_package_name" class="pay_detail_package"></b></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col m1"></div>
+                    <div class="col s12 m11">
+                        <p class="pay_detail_bill">Sub total : <b id="pay_detail_package_price" class="pay_detail_subtotal"></b></p>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-flat waves-effect" onclick="pay();">Proceed</button>
+            <button class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+          </div>
+        </div>
         
         <script>
             var slideIndex = 0;

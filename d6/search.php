@@ -44,14 +44,16 @@
         
         $(document).ready(function() {
 
-            
+            getLocation();
+
+           
 
             $(".review").hide();
             $('.mobile-nav-bar').hide();
             $('ul.tabs').tabs();
             $('select').material_select();
             
-            getLocation();
+            
             
             if(window.innerWidth < 600){
                 $('#filters').hide();
@@ -870,6 +872,8 @@
             </div>
         </div>
     </section>
+
+    
         
     <!-- Footer
     ================================================-->

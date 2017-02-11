@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 session_start();
 //session_destroy();
@@ -11,16 +11,27 @@ $user_name = '';
 $table = "";
 $user_phone = '';
 $user_profile_url = "";
+$msg='';
 
 
 
 require_once('connect.php');
     if(isset($_SESSION['activated'])){
-        echo 'Your Account has been activated Successfully';
+        $msg = 'Your Account has been activated Successfully';
         unset($_SESSION['activated']);
+        session_destroy();
     }
     
+    if(isset($_SESSION['reg_status'])){
+        $msg = $_SESSION['reg_status'];
+        unset($_SESSION['reg_status']);
+    }
     
+    if(!isset($_SESSION['firstime'])){
+      $_SESSION['firstime'] = 'yes';
+      echo "<script> 
+              </script>";
+    }
         
 
    if(isset($_POST['logout']))   {
@@ -50,45 +61,53 @@ require_once('connect.php');
       if(isset($_POST['loginbtn'])){
        $lemail = $_POST['loginemail'];
        $lpass = $_POST['loginpassword'];
-       echo $type = $_POST['group1'];
+       $type = $_POST['group1'];
        
       if($type== 'user'){
            $query = "SELECT * FROM `users` WHERE `email` = '$lemail' AND `pass` = '$lpass' ";
              if($query_run = mysqli_query($mysqli, $query)){
                 if(mysqli_num_rows($query_run)==1){
                      while($row = mysqli_fetch_assoc($query_run)){
+                     $auth = $row['authorized'];
+                     if($auth=='1'){
                       $_SESSION['loggedin'] = $row['id'];
                       $_SESSION['type'] = $type;
                       $_SESSION['user_type'] = $type;
                       $_SESSION['login_type'] = 'normal';
-                      $_SESSION['table'] = 'users';
-                      $user_name = $row['name'];
-                      $user_email = $row['email'];
-                      $user_picture = "img/beautiful.jpg";
-                      $user_phone = $row['phone'];
+                      $_SESSION['user_name']=  $user_name = $row['name'];
+                      $_SESSION['user_email']=$user_email = $row['email'];
+                      $_SESSION['user_picture']=$user_picture = "img/beautiful.jpg";
+                      $_SESSION['user_phone']=$user_phone = $row['phone'];
+                      }else if($auth==0){
+                        $msg = 'Please Verify Your Email By Clicking on link sent to you email';
+                      }
                     }
                }
           }else{
-               echo 'Some Error Occured';
+               $msg =  'Some Error Occured';
           }
       }else{
            $query = "SELECT * FROM `schools` WHERE `email` = '$lemail' AND `pass` = '$lpass' ";
                  if($query_run = mysqli_query($mysqli, $query)){
                 if(mysqli_num_rows($query_run)==1){
                      while($row = mysqli_fetch_assoc($query_run)){
-                      $_SESSION['loggedin'] = $row['id'];
-                      $_SESSION['type'] = $type;
-                      $_SESSION['user_type'] = 'school';
-                      $_SESSION['login_type'] = 'normal';
-                      $_SESSION['table'] = 'schools';
-                      $user_name = $row['owners_name'];
-                      $user_email = $row['email'];
-                      $user_picture = "img/beautiful.jpg";
-                      $user_phone = $row['phone'];
+                     $auth = $row['authorized'];
+                     if($auth=='1'){
+                        $_SESSION['loggedin'] = $row['id'];
+                        $_SESSION['type'] = $type;
+                        $_SESSION['user_type'] = 'school';
+                        $_SESSION['login_type'] = 'normal';
+                        $_SESSION['user_name']=$user_name = $row['owners_name'];
+                        $_SESSION['user_email']=$user_email = $row['email'];
+                        $_SESSION['user_picture']=$user_picture = "img/beautiful.jpg";
+                        $_SESSION['user_phone']=$user_phone = $row['phone'];
+                 }else if($auth==0){
+                             $msg = 'Please Verify Your Email By Clicking on link send to your email';
+                      }
                     }
                }
           }else{
-               echo 'Some Error Occured';
+               $msg =  'Some Error Occured';
           }
       }
 
@@ -111,9 +130,13 @@ require_once('connect.php');
                 $user_picture = $row['picture'];
                 $user_name = $user_firstname.' '.$user_lastname;
                 $user_phone = $row['phone'];
+                 $_SESSION['user_name']=  $user_name;
+                $_SESSION['user_email']=  $user_email;
+                $_SESSION['user_picture']=$user_picture;
+                $_SESSION['user_phone']=$user_phone;
             }
         } else {
-          echo mysqli_error($mysqli);
+          $msg =  'Some Error Occured';
         }
       } else if($login_type == "facebook"){
         $query = "SELECT * FROM $table WHERE id = $user_id";
@@ -123,9 +146,13 @@ require_once('connect.php');
                 $user_email = $row['email'];
                 $user_picture = $row['image'];
                 $user_phone = $row['phone'];
+                 $_SESSION['user_name']=  $user_name;
+              $_SESSION['user_email']=  $user_email;
+              $_SESSION['user_picture']=$user_picture;
+              $_SESSION['user_phone']=$user_phone;
             }
         } else {
-          echo mysqli_error($mysqli);
+          $msg =  'Some Error Occured';
         }
       }
    }
@@ -172,7 +199,7 @@ require_once('connect.php');
 
         $query = "UPDATE $table SET phone = $user_phone WHERE id = '".$_SESSION['loggedin']."'";
         if(!mysqli_query($mysqli, $query)){
-          echo mysqli_error($mysqli);
+          $msg =  'Some Error Occured';
         }
       }
     } else if($user_type == 'school'){
@@ -201,10 +228,10 @@ require_once('connect.php');
                     upload_image($row['email']);
                 }
            } else {
-              echo mysqli_error($mysqli);
+              $msg =  'Some Error Occured';
            }
         } else {
-          echo mysqli_error($mysqli);
+          $msg =  'Some Error Occured';
         }
 
       }
@@ -227,6 +254,7 @@ require_once('connect.php');
     } 
 
     function upload_image($email){
+    
             
             $target_dir = "uploads/".$email;
             if (!file_exists($target_dir)) {
@@ -236,11 +264,11 @@ require_once('connect.php');
                 mkdir($target_dir.'/gallery', 0777, true);
             }
             $target_dir.="/";
-            echo $file_name = $_FILES['d_cover_photo']['name'];
-            echo $file_tmp = $_FILES['d_cover_photo']['tmp_name'];
+            $file_name = $_FILES['d_cover_photo']['name'];
+            $file_tmp = $_FILES['d_cover_photo']['tmp_name'];
              if(move_uploaded_file($file_tmp,$target_dir.'cover_photo.jpg')){
                    
-             }else echo 'file upload failed';
+             }else $msg =  'file upload failed';
         }
    
 ?>
@@ -266,11 +294,14 @@ require_once('connect.php');
             var curLat, curLng, schoolLat, schoolLng;
 
             var myVar;
+            
+            var msg = '<?php echo $msg; ?>';
+            
 
             
 
             function myFunction() {
-                myVar = setTimeout(showPage, 3000);
+                myVar = setTimeout(showPage, 2000);
             }
 
             function showPage() {
@@ -279,10 +310,12 @@ require_once('connect.php');
             }
             
             $(document).ready(function (){
-                
+                $('#myDiv').hide();
+                if(msg.length > 0)
+                  $('#modal2').openModal('open');
                 $('.profile').hide();
                 $('#loginform_details').hide();
-                $('#myDiv').hide();
+                
                 $('select').material_select();
                 $('.datepicker').pickadate({
                   selectMonths: true, // Creates a dropdown to control month
@@ -297,10 +330,11 @@ require_once('connect.php');
 
                 $('#search_form').attr("style","top:" + (screenHeight*0.05) + "px;");
 
-                if(screenHeight < 768){
-                   searchModal();
-                }
-
+               
+    if(screenHeight < 768){
+      
+       if(page_load_counter()==1) searchModal();    
+              }
                 
                 
                 $('.mobile-nav-bar').hide();
@@ -319,7 +353,14 @@ require_once('connect.php');
 
             
             });
-            
+            function page_load_counter(){
+                var n = localStorage.getItem('on_load_counter');
+                if(n == null)
+                    n=0;
+                n++;
+                localStorage.setItem("on_load_counter", n);
+                return n;
+       }
             
             function slideImage(){
                 $('.carousel').carousel('next');
@@ -343,17 +384,17 @@ require_once('connect.php');
             function signInModal(){
                 $('#modal1').openModal('open');
             }
+            
 
-            function searchModal(){
+            function searchModal(){ 
+              $('#searchModal').attr('style','height:'+window.innerHeight+'px;overflow: hidden;background: #C04848;background: -webkit-linear-gradient(to left, #C04848, #480048);background: linear-gradient(to left, #C04848 , #480048);');
                 $('#searchModal').openModal('open');
             }
             
-            function searchForm(addressId, btnId, dpId, latId, lngId, timeId){
-                if($('#'+timeId).val() == ""){
-                  alert('please enter time');
-                } else {
-                    getCoordinates(addressId, btnId, dpId, latId, lngId);
-                }
+            function searchForm(addressId, btnId, dpId, latId, lngId, formId){
+                
+                    getCoordinates(addressId, btnId, dpId, latId, lngId, formId);
+               
             }
 
             function currentLocation(id){
@@ -379,23 +420,26 @@ require_once('connect.php');
             }
             
             
-            function getCoordinates(id1, id2, id3, id4, id5){
+            function getCoordinates(id1, id2, id3, id4, id5, id6){
                 var geocoder = new google.maps.Geocoder();
                 var address = document.getElementById(id1).value;
                 
                 if(address.length){
+                
                       geocoder.geocode({'address': address}, function(results, status) {
                       if (status === 'OK') {                      
                         curLat = results[0].geometry.location.lat();
                         curLng = results[0].geometry.location.lng();
                         
+                        
+                  
                         $('#' + id4).val(curLat);
                         $('#' + id5).val(curLng);
 
                         
                         var dateValue = document.getElementById(id3).value;
                         if(dateValue.length != 0){
-                            $("#search_form").submit();
+                            $("#"+id6).submit();
                         } else {
                             alert('Please select any date!');
                         }
@@ -480,19 +524,15 @@ require_once('connect.php');
 
               $(id).show();
             }
-
+            
+            
             function suggest(id){
 
               var input = document.getElementById(id);
 
-              
-
-              var autocomplete = new google.maps.places.Autocomplete(input); 
-
-
+              var autocomplete = new google.maps.places.Autocomplete(input);  
 
               autocomplete.addListener('place_changed', function() {
-                alert('hi'); 
                 var place = autocomplete.getPlace();
                 if (!place.geometry) {
                   // User entered the name of a Place that was not suggested and
@@ -509,8 +549,6 @@ require_once('connect.php');
                     (place.address_components[2] && place.address_components[2].short_name || '')
                   ].join(' ');
                 }
-
-                alert(address);
                 
               });
             }
@@ -599,6 +637,9 @@ require_once('connect.php');
                 background: #C04848; /* fallback for old browsers */
                 background: -webkit-linear-gradient(to left, #C04848 , #480048); /* Chrome 10-25, Safari 5.1-6 */
                 background: linear-gradient(to left, #C04848 , #480048); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
             }
             
             .searchBtn:hover{
@@ -647,11 +688,14 @@ require_once('connect.php');
 
 
 
-            .loader-text{
-              font-size: 5em;
-              font-weight: 100;
-              float: left;
-              color: #560848;
+            .loader-text {
+                font-size: 5em;
+                font-weight: 100;
+                float: left;
+                color: #560848;
+                position: relative;
+                top: 2em;
+                left: 43%;
             }
 
             .loader-icon{
@@ -659,21 +703,26 @@ require_once('connect.php');
                 top: 7.3em;
             }
 
-            #loader{
+            #loader {
               position: relative;
-              left: 40%;
-              top: 9em;
+              left: 0%;
+              top: 2em;
+              background: white;
+              height: 1000px;
             }
 
             .preloader-wrapper.big {
                 width: 50px;
                 height: 50px;
+                position: relative;
+                top: 17.5em;
+                left: 43%;
             }
 
-            .loader-image{
-              position: relative;
-              top: 9em;
-              left: -22em;
+            .loader-image {
+                position: relative;
+                top: 20em;
+                left: 25%;
             }
 
             .profile{
@@ -740,6 +789,74 @@ require_once('connect.php');
                 margin-right: 8px;
                 cursor: pointer;
             }
+            
+            .pac-container{
+              z-index: 2000;
+            }
+
+            .new_search_form{
+              position: relative;
+              top: 30%;
+            }
+
+            .home-header{
+              position: relative;top: -5em;
+            }
+
+            footer{
+              position: relative;
+              top: 2em;
+            }
+
+            .navigation-bar {
+                position: fixed;
+                top: 0;
+                overflow: hidden;
+                width: 100%;
+                z-index: 100;
+                height: 80px;
+            }
+
+            .nav-wrapper {
+                position: relative;
+                height: 100%;
+                margin-top: 10px;
+            }
+
+            .brand-logo img{
+              height: 66px;
+            }
+
+            nav .brand-logo {
+                position: absolute;
+                color: #fff;
+                display: inline-block;
+                font-size: 2.1rem;
+                padding: 0;
+                white-space: nowrap;
+                cursor: pointer;
+                z-index: 3;
+            }
+
+            .contact_us{
+              box-shadow: 0px 6px 50px 0px rgba(26,20,26,1);padding-right: 31px;margin-top: 70px;padding-left: 20px;padding-bottom: 7px;
+            }
+
+            .contact_us_header{
+              font-size: 2em;font-weight: 300;text-align: center;padding-top: 35px;color: white;
+            }
+
+            .contact_info{
+              box-shadow: 0px 6px 50px 0px rgba(26,20,26,1);padding-right: 31px;margin-top: 70px;padding-left: 20px;padding-bottom: 7px;
+            }
+
+            .contact_email{
+              font-size: 2em; font-weight: 300; color: white;
+            }
+
+            .row{
+              margin-bottom: 0;
+            }
 
             @media only screen and (max-width: 768px){
                 .loader-text {
@@ -748,8 +865,8 @@ require_once('connect.php');
                     float: left;
                     color: #560848;
                     position: relative;
-                    left: -85px;
-                    top: -115px;
+                    left: 50px;
+                    top: 50px;
                 }
 
                 .loader-icon {
@@ -761,12 +878,15 @@ require_once('connect.php');
                 .preloader-wrapper.big {
                     width: 38px;
                     height: 38px;
+                    position: relative;
+                    top: 131px;
+                    left: 49px;
                 }
 
-              .loader-image{
+              .loader-image {
                   position: relative;
-                  top: -8em;
-                  left: -35%;
+                  top: 0em;
+                  left: 8%;
               }
 
               .loader-image img{
@@ -776,9 +896,9 @@ require_once('connect.php');
               .profile {
                   position: fixed;
                   top: 6em;
-                  width: 300px;
+                  width: 94%;
                   background: white;
-                  right: 11px;
+                  right: 3%;
                   box-shadow: 0px 6px 20px 0px rgba(26,20,26,1);
                   z-index: 100;
               }
@@ -794,11 +914,68 @@ require_once('connect.php');
                     overflow-y: auto;
                     height: 420px;
                 }
+
+                .home-header {
+                    position: relative;
+                    top: 11em;
+                    color: white;
+                    z-index: 1;
+                }
+
+                #main-carousel{
+                  position: relative;
+                  top: -111px;
+                }
+
+                .register-section {
+                    height: 100%;
+                    position: relative;
+                    margin-bottom: 0em;
+                    padding-top: 1px;
+                    padding-bottom: 40px;
+                    margin-top: -8em;
+                }
+
+                footer{
+                  position: relative;
+                  top: 30px;
+                  height: 8em;
+                }
+
+                #loader {
+                    position: relative;
+                    left: 0%;
+                    top: 2em;
+                    z-index: 2;
+                    background: white;
+                    height: 480px;
+                }
+
+                
+                .brand-logo img{
+                  height: 40px;
+                }
+                
+                .navigation-bar {
+                    position: fixed;
+                    top: 0;
+                    overflow: hidden;
+                    width: 100%;
+                    z-index: 100;
+                    height: 55px;
+                }
+
+                .nav-wrapper {
+                    position: relative;
+                    height: 100%;
+                    margin-top: 10px;
+                }
+
             }
 
         </style>
     </head>
-    <body onload="myFunction()" style="overflow-x: hidden;">
+    <body onload="myFunction()" style="overflow-x: hidden;position: relative;top: -30px;" class="grey-gradient-left">
 
         <!-- loader -->
 
@@ -861,13 +1038,122 @@ require_once('connect.php');
       
             
             <section>
-                <div class="carousel carousel-slider center" id="main-carousel" data-indicators="true">
+                <!--div class="carousel carousel-slider center" id="main-carousel" data-indicators="true">
                     <div class="carousel-item-inner">
                         <h2 class="white-text carousel-item-header">Drivingo</h2>
-                        <p class="white-text carousel-item-subheader">Craft your journey.</p>
+                        <p class="white-text carousel-item-subheader">Anybody Can Drive</p>
                     </div>
                     <div class="carousel-fixed-item center">
-                      <form action="search.php" id="search_form" method="get" class="hide-on-small-only  search_form">
+                      <form action="search.php" id="search_form1" method="get" class="hide-on-small-only  search_form">
+                        <div class="row">
+                          <div class="col s1 m3 l3"></div>
+                          <div class="input-field col s10 m6 l6">
+                            <input id="location-input1" onkeydown="suggest('location-input1');" placeholder="Enter any location..." type="text" class="validate" required>
+                            <span class="location-icon tooltipped" data-position="bottom" data-delay="50" data-tooltip="current location" onclick="currentLocation('#location-input1')"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                         </div>  
+                        </div>  
+
+                        <div class="row datetime-top">
+                            <div class="col s1 m3 l3"></div>
+                            <div class="col s10 m3 l3 datepicker-top">
+                                <input name="date" id="datepicker1" type="date" class="datepicker" placeholder="pick a date..." required>
+                                <span class="location-icon"><i class="fa fa-calendar fa" aria-hidden="true"></i></span>
+                            </div>
+                            <div class="col s10 m3 l3 datepicker-top">
+                                <input name="time" placeholder="Preferred time" id="time" type="text" class="validate" required>
+                                <span class="location-icon"><i class="fa fa-clock-o fa" aria-hidden="true"></i></span>
+                            </div>
+                            <div class="input-field col s10 m3 l3 ">
+                              <select name="time">
+                                <option value="" disabled selected>Preffered time...</option>
+                                <option value="4:00 AM">4:00 AM</option>
+                                <option value="5:00 AM">5:00 AM</option>
+                                <option value="6:00 AM">6:00 AM</option>
+                                <option value="6:00 AM">6:00 AM</option>
+                                <option value="7:00 AM">7:00 AM</option>
+                                <option value="8:00 AM">8:00 AM</option>
+                                <option value="9:00 AM">9:00 AM</option>
+                                <option value="10:00 AM">10:00 AM</option>
+                                <option value="11:00 AM">11:00 AM</option>
+                                <option value="12:00 AM">12:00 AM</option>
+                                <option value="1:00 PM">1:00 PM</option>
+                                <option value="2:00 PM">2:00 PM</option>
+                                <option value="3:00 PM">3:00 PM</option>
+                                <option value="4:00 PM">4:00 PM</option>
+                                <option value="5:00 PM">5:00 PM</option>
+                                <option value="6:00 PM">6:00 PM</option>
+                                <option value="7:00 PM">7:00 PM</option>
+                                <option value="8:00 PM">8:00 PM</option>
+                                <option value="9:00 PM">9:00 PM</option>
+                                <option value="10:00 PM">10:00 PM</option>
+                                <option value="11:00 PM">11:00 PM</option>
+                                <option value="12:00 PM">12:00 PM</option>
+                              </select>
+                              <span class="time-icon"><i class="fa fa-clock-o fa" aria-hidden="true"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="row services-top">
+                           <div class="col s1 m3 l3"></div>
+                           <div class="col s10 m2 l2">
+                             <p class="services center-align">Type of services</p>
+                           </div>
+                           <div class="col s10 m4 l4">
+                              <div class="col m12">
+                                  <p style="float: left;margin-right: 4em; font-weight: 400;">
+                                      <input name="service" value="training" type="radio" id="test1" checked="checked" required />
+                                      <label for="test1">Only training</label>
+                                  </p>
+                                  <p style="float: left; font-weight: 400;">
+                                      <input name="service" value="License" type="radio" id="test2" required />
+                                      <label for="test2">Training + License</label>
+                                  </p>
+                                  <p style="float: left; font-weight: 400;">
+                                      <input name="service" value="d_school" type="radio" id="test3" required />
+                                      <label for="test3">Bike stunts</label>
+                                  </p>
+                              </div>
+                           </div>
+                        </div>
+
+                        <input name="lat" class="hide" id="lat1" value="" type="text"/>
+                        <input name="lng" class="hide" id="lng1" value="" type="text"/>
+
+                        <div class="row">
+                          <div class="col s1 m3 l3"></div>
+                          <div class="col s10 m6 l6">
+                              <input type="button" onclick="searchForm('location-input1', 'searchHiddenBtn1', 'datepicker1', 'lat1', 'lng1', 'search_form1')" class="btn searchBtn" value="Search" />
+                              <input type="submit" onclick="searchForm('location-input1', 'searchHiddenBtn1', 'datepicker1', 'lat1', 'lng1')" id="searchHiddenBtn1" class="hide" value="Search" />
+                          </div>
+                        </div>
+                      </form>
+
+                      <div class="row hide-on-med-and-up">
+                          <div class="col s1 m3 l3"></div>
+                          <div class="col s10 m6 l6">
+                              <button type="button" onclick="searchModal()" class="btn searchBtn">Search</button>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="carousel-item carousel-item-one white-text" href="#one!"></div>
+                    <div class="carousel-item carousel-item-two white-text" href="#two!"></div>
+                    <div class="carousel-item carousel-item-three white-text" href="#three!"></div>
+                    <div class="carousel-item carousel-item-four white-text" href="#four!"></div>
+                </div-->
+
+                <div style="" class="home-header hide-on-med-and-up">
+                    <h2 class="white-text carousel-item-header center-align">Drivingo</h2>
+                    <p class="white-text carousel-item-subheader center">Anybody Can Drive</p>
+                </div>
+
+                <div id="main-carousel" class="grey-gradient-left">
+                  <form action="search.php" id="search_form1" method="get" class="hide-on-small-only  new_search_form" style="">
+                        
+                        <div style="" class="home-header">
+                            <h2 class="white-text carousel-item-header center-align">Drivingo</h2>
+                            <p class="white-text carousel-item-subheader center">Anybody Can Drive</p>
+                        </div>
+                        
                         <div class="row">
                           <div class="col s1 m3 l3"></div>
                           <div class="input-field col s10 m6 l6">
@@ -945,27 +1231,22 @@ require_once('connect.php');
                         <div class="row">
                           <div class="col s1 m3 l3"></div>
                           <div class="col s10 m6 l6">
-                              <input type="button" onclick="searchForm('location-input1', 'searchHiddenBtn1', 'datepicker1', 'lat1', 'lng1', 'time')" class="btn searchBtn" value="Search" />
+                              <input type="button" onclick="searchForm('location-input1', 'searchHiddenBtn1', 'datepicker1', 'lat1', 'lng1', 'search_form1')" class="btn searchBtn center-align" value="Search" />
                               <!--input type="submit" onclick="searchForm('location-input1', 'searchHiddenBtn1', 'datepicker1', 'lat1', 'lng1')" id="searchHiddenBtn1" class="hide" value="Search" /-->
                           </div>
                         </div>
                       </form>
-
-                      <div class="row hide-on-med-and-up">
+                       <div class="row hide-on-med-and-up" style="position: relative;top: 30em;">
                           <div class="col s1 m3 l3"></div>
                           <div class="col s10 m6 l6">
                               <button type="button" onclick="searchModal()" class="btn searchBtn">Search</button>
                           </div>
                       </div>
                     </div>
-                    <div class="carousel-item carousel-item-one white-text" href="#one!"></div>
-                    <div class="carousel-item carousel-item-two white-text" href="#two!"></div>
-                    <div class="carousel-item carousel-item-three white-text" href="#three!"></div>
-                    <div class="carousel-item carousel-item-four white-text" href="#four!"></div>
-                </div>
+                
 
                 <nav class="navigation-bar">
-                    <a href="#" class="brand-logo logo1 left"><img style="height: 40px;" src="img/logo1.png" /></a>
+                    <a href="index.php" class="brand-logo logo1 left"><img src="img/logo1.png" /></a>
                     <span class="menu-icon" id="menu-icon" onclick="mobileNavBar();"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></span>
                     <div class="nav-wrapper">
                      <form method="post" action="index.php">
@@ -995,9 +1276,12 @@ require_once('connect.php');
                             </div>
                             <?php if(isset($_SESSION['loggedin'])){
                               ?>
-                                  <div class="row center-align" style="margin-top: -10px">
+                                  <!--iv class="row center-align" style="margin-top: -10px">
                                     <form method="post" action="index.php"><li><input type="submit" value="<?php echo 'Hi, '.$_SESSION['loggedin'].' | LogOut';?> " name="logout1" /></li></form>
-                                  </div>
+                                  </div-->
+                                  <div class="row center-align" style="margin-top: -10px;margin-bottom: -10px;">
+                                <a class="mobile-nav-bar-options" onclick="openProfile();" href="#">profile</a>
+                            </div>
                               <?php
                              }else{
                                 ?>
@@ -1006,9 +1290,7 @@ require_once('connect.php');
                                  </div>
                              <?php
                              }?>
-                            <!--div class="row center-align" style="margin-top: -10px;margin-bottom: -10px;">
-                                <a class="mobile-nav-bar-options" onclick="openProfile();" href="#">profile</a>
-                            </div-->
+                            
                         </div>
                     </div>
                 </nav>
@@ -1210,7 +1492,7 @@ require_once('connect.php');
             
     <?php }?>
             
-            <section class="customer-reviews grey-gradient-left">
+            <!--section class="customer-reviews grey-gradient-left">
                 <div class="customer-reviews-header"><p>What our customers have to say about us</p></div>
                 <div class="customer-reviews-slider">
                     <div class="carousel carousel-slider center grey-gradient-left" data-indicators="true">
@@ -1238,7 +1520,53 @@ require_once('connect.php');
                         </div>    
                     </div>
                 </div>
-            </section>
+            </section-->
+          
+
+          <!-- connect with us -->
+
+          <section class="connect_with_us">
+            <div class="row">
+              <div class="col m2"></div>
+              <div class="col m4 s12 animated pulse">
+                <div class="contact_us" style="">
+                  <p class="contact_us_header" style="">Please fill the form to get in touch</p>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input id="" type="text" class="validate" placeholder="Name">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input id="" type="text" class="validate" placeholder="Phone">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input id="" type="email" class="validate" placeholder="Email">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <textarea id="textarea1" class="materialize-textarea">Enter message</textarea>
+                    </div>
+                  </div>
+                  <div class="row right-align">
+                    <button type="submit" class="btn grey-gradient-left">Submit</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col m4 s12 animated pulse">
+                <div class="contact_info" style="">
+                  <p class="contact_us_header" style="">Contact Info</p>
+                  <div class="row">
+                    <p class="contact_email" style="">Email :</p>
+                    <p class="contact_email" style="">contact@drivingo.in</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
             
             
           <!-- sign in Structure -->
@@ -1288,7 +1616,7 @@ require_once('connect.php');
             <!-- Popup Modal -->
               <div id="modal2" class="modal">
                 <div class="modal-content" style="background: #FAFAFA;">
-                  <div class="alert-modal-data" id="alert-modal-data"><p class="center-align">A bunch of text</p></div>
+                  <div class="alert-modal-data" id="alert-modal-data"><p class="center-align"><?php if(strlen($msg) > 0) echo $msg; ?></p></div>
                 </div>
                 <div class="modal-footer">
                   <a class=" modal-action modal-close waves-effect waves-green btn-flat">close</a>
@@ -1298,11 +1626,11 @@ require_once('connect.php');
               <!-- Search Modal -->
               <div id="searchModal" class="modal bottom-sheet hide-on-med-and-up" style="overflow: hidden;background: #C04848;background: -webkit-linear-gradient(to left, #C04848 , #480048);background: linear-gradient(to left, #C04848 , #480048);">
                 <div class="modal-content" style="padding-left: 0;padding-top: 0;padding-bottom: 0;">
-                  <form action="search.php" method="get">
+                  <form action="search.php" id="search_form2" method="get">
                         <div class="row">
                           <div class="col m3 l3"></div>
                           <div class="input-field col s12 m6 l6">
-                            <input id="location-input2" onkeyup="suggest('location-input2');" placeholder="Enter any location..." type="text" class="validate" required>
+                            <input id="location-input2" onkeydown="suggest('location-input2');" placeholder="Enter any location..." type="text" class="validate" required>
                             <span class="location-icon tooltipped" data-position="bottom" data-delay="50" data-tooltip="current location" onclick="currentLocation('#location-input2')"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
                          </div>  
                         </div>  
@@ -1313,13 +1641,41 @@ require_once('connect.php');
                                 <input name="date" type="date" id="datepicker2" class="datepicker" placeholder="pick a date..." required>
                                 <span class="location-icon"><i class="fa fa-calendar fa" aria-hidden="true"></i></span>
                             </div>
-                            <div class="col s12 m3 l3 datepicker-top" style="top: -108px;">
+                            <!--div class="col s12 m3 l3 datepicker-top" style="top: -108px;">
                                 <input name="time" placeholder="Preferred time" type="text" class="validate" required>
                                 <span class="location-icon"><i class="fa fa-clock-o fa" aria-hidden="true"></i></span>
+                            </div-->
+                            <div class="input-field col s12 m3 l3 datepicker-top" style="top: -74px;">
+                              <select name="time">
+                                <option value="" disabled selected>Preffered time...</option>
+                                <option value="4:00 AM">4:00 AM</option>
+                                <option value="5:00 AM">5:00 AM</option>
+                                <option value="6:00 AM">6:00 AM</option>
+                                <option value="6:00 AM">6:00 AM</option>
+                                <option value="7:00 AM">7:00 AM</option>
+                                <option value="8:00 AM">8:00 AM</option>
+                                <option value="9:00 AM">9:00 AM</option>
+                                <option value="10:00 AM">10:00 AM</option>
+                                <option value="11:00 AM">11:00 AM</option>
+                                <option value="12:00 AM">12:00 AM</option>
+                                <option value="1:00 PM">1:00 PM</option>
+                                <option value="2:00 PM">2:00 PM</option>
+                                <option value="3:00 PM">3:00 PM</option>
+                                <option value="4:00 PM">4:00 PM</option>
+                                <option value="5:00 PM">5:00 PM</option>
+                                <option value="6:00 PM">6:00 PM</option>
+                                <option value="7:00 PM">7:00 PM</option>
+                                <option value="8:00 PM">8:00 PM</option>
+                                <option value="9:00 PM">9:00 PM</option>
+                                <option value="10:00 PM">10:00 PM</option>
+                                <option value="11:00 PM">11:00 PM</option>
+                                <option value="12:00 PM">12:00 PM</option>
+                              </select>
+                              <span class="time-icon"><i class="fa fa-clock-o fa" aria-hidden="true"></i></span>
                             </div>
                         </div>
 
-                        <div class="row services-top" style="top: -164px;">
+                        <div class="row services-top" style="top: -120px;">
                            <div class="col m3 l3"></div>
                            <div class="col s10 m2 l2">
                              <p class="services" style="left: -15px;">Type of services</p>
@@ -1354,8 +1710,8 @@ require_once('connect.php');
                         <input name="lng" class="hide" id="lng2" value="" type="text"/>
                   </div>
                   <div class="modal-footer" style="position: fixed;bottom: 0px;">
-                    <input type="button" onclick="searchForm('location-input2', 'searchHiddenBtn2', 'datepicker2', 'lat2', 'lng2', 'time')" class="btn searchBtn" value="Search" style="float: left;" />
-                    <input type="submit" id="searchHiddenBtn2" class="hide">
+                    <input type="button" onclick="searchForm('location-input2', 'searchHiddenBtn2', 'datepicker2', 'lat2', 'lng2', 'search_form2')" class="btn searchBtn" value="Search" style="float: left;" />
+                    
                     <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">close</a>
                   </div>
                 </form>
@@ -1367,10 +1723,10 @@ require_once('connect.php');
                 </div>
                 <div class="row profile_image_container">
                   <div class="col s4">
-                    <img src="<?php echo $user_picture; ?>" height="60" width="60" class="circle profile_image" />
+                    <img src="<?php echo $_SESSION['user_picture']; ?>" height="60" width="60" class="circle profile_image" />
                   </div>
                   <div class="col s8">
-                    <p class="profile_name"><?php echo $user_name; ?></p>
+                    <p class="profile_name"><?php echo $_SESSION['user_name']; ?></p>
                   </div>
                 </div>
                 <div class="row">
@@ -1379,7 +1735,7 @@ require_once('connect.php');
                     <i class="fa fa-mobile fa-2x" aria-hidden="true"></i>
                   </div>
                   <div class="col s9">
-                    <p class="profile_mobile"><?php echo $user_phone; ?></p>
+                    <p class="profile_mobile"><?php echo $_SESSION['user_phone']; ?></p>
                   </div>
                 </div>
                 <div class="row">
@@ -1388,7 +1744,7 @@ require_once('connect.php');
                     <i class="fa fa-vcard-o fa-2x" aria-hidden="true"></i>
                   </div>
                   <div class="col s9">
-                    <p class="profile_mobile"><?php echo $user_email; ?></p>
+                    <p class="profile_mobile"><?php echo $_SESSION['user_email']; ?></p>
                   </div>
                 </div>
                 <?php if(strlen($user_profile_url) > 0) { ?>
@@ -1502,12 +1858,18 @@ require_once('connect.php');
                     <input type="hidden" value="" id="updateLat"  name="update_lat">
                     <input type="hidden" value="" id="updateLng" name="update_lng">
 
-                  <?php } ?>  
+                      <div class="row">
+                        <button class="btn searchBtn right" type="button" onclick="verifyAddress('#update_address', '#updateHiddenBtn','#updateLat', '#updateLng');" style="margin-right: 15px;">SAVE</button>
+                        <input id="updateHiddenBtn" type="submit" class="hide" value="send">
+                      </div>
 
-                  <div class="row">
-                    <button class="btn searchBtn right" type="button" onclick="verifyAddress('#update_address', '#updateHiddenBtn','#updateLat', '#updateLng');" style="margin-right: 15px;">SAVE</button>
-                    <input id="updateHiddenBtn" type="submit" class="hide" value="send">
-                  </div>
+                  <?php } else { ?>  
+
+                    <div class="row">
+                        <button class="btn searchBtn right" type="submit" o style="margin-right: 15px;">SAVE</button>
+                      </div>
+
+                  <?php } ?>
                 </form>
               </div>
             
@@ -1517,13 +1879,14 @@ require_once('connect.php');
                 <div class="row" style="margin-bottom: 0;">
                     <div class="col l1 m1"></div>
                     <div class="col s12 m4 l4 footer-p">
-                        <div class="footer-p1"><p>© drivigo 2016.</p></div>
-                        <div class="footer-p2"><p>Designed & developed by Sarang Kartikey & Sarfraz Ahmad, exclusively for Drivigo Pvt. Ltd. </p></div>
+                        <div class="footer-p1"><p>© drivingo 2016.</p></div>
+                        <div class="footer-p2"><!--p>Designed & developed by Sarang Kartikey & Sarfraz Ahmad, exclusively for Drivigo Pvt. Ltd. </p--></div>
                     </div>
                 </div>
             </footer>
 
         </div>
+      </div>
         
         <script src="materialize/js/materialize.min.js"></script>
     </body>
