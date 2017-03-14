@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="pickadate/lib/themes/default.css">
+		<link rel="stylesheet" href="pickadate/lib/themes/default.date.css">
+		<script src="js/jquery.js"></script>
+		<script src="pickadate/lib/legacy.js"></script>
+		<script src="pickadate/lib/picker.js"></script>
+		<script src="pickadate/lib/picker.date.js"></script>
+		
+
+		<script>
+			$(document).ready(function (){
+				$('#datepicker').pickadate({
+			        format: 'mm/dd/yyyy',
+			        formatSubmit: 'mm/dd/yyyy',
+			        hiddenName: true
+			    });in
+
+
+			});
+			
+		</script>
+	</head>
+	<body>
+		<input id="datepicker" type="text">
+	</body>
+</html>

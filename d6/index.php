@@ -552,6 +552,11 @@ require_once('connect.php');
                 
               });
             }
+
+            function openOrders(){
+              openProfile();
+              $('#order_modal').openModal('open');
+            }
             
         </script>
         
@@ -858,6 +863,22 @@ require_once('connect.php');
               margin-bottom: 0;
             }
 
+            .orders_header{
+              font-size: 2em;
+              font-weight: 300;
+              text-align: center;
+              color: darkmagenta;
+            }
+
+            .myorders{
+              margin-left: 5em;
+            }
+
+            .card .card-title {
+                font-size: 18px;
+                font-weight: 400;
+            }
+
             @media only screen and (max-width: 768px){
                 .loader-text {
                     font-size: 4em;
@@ -969,6 +990,36 @@ require_once('connect.php');
                     position: relative;
                     height: 100%;
                     margin-top: 10px;
+                }
+
+                .modal {
+                    display: none;
+                    position: fixed;
+                    left: 0;
+                    right: 0;
+                    padding: 0;
+                    max-height: 70%;
+                    background-color: grey;
+                    width: 94%;
+                    margin: auto;
+                    overflow-y: auto;
+                    border-radius: 2px;
+                    will-change: top, opacity;
+                }
+
+
+                .card .card-title {
+                    font-size: 16px;
+                    font-weight: 500;
+                }
+
+                .orders_card{
+                  width: 120%;
+                  margin-left: -10%;
+                }
+
+                .card .card-content .card-title {
+                    line-height: 26px;
                 }
 
             }
@@ -1755,6 +1806,15 @@ require_once('connect.php');
                   </div>
                 <?php } ?>
                 <div class="row">
+                  <div class="col s1"></div>
+                  <div class="col s2" style="padding-left: 0px;">
+                    <i class="fa fa-cart-plus fa-2x" onclick="openOrders();" aria-hidden="true" style="cursor: pointer;"></i>
+                  </div>
+                  <div class="col s9">
+                    <p class="profile_mobile" onclick="openOrders();" style="cursor: pointer;">My orders</p>
+                  </div>
+                </div>
+                <div class="row">
                   <form method="post" action="index.php">
                     <li class="center-align" style="list-style: none;">
                       <input style="color: #4B0248;font-family: 'Alegreya Sans';" type="submit" class="btn btn-flat" value="Logout" name="logout" />
@@ -1874,6 +1934,47 @@ require_once('connect.php');
               </div>
             
             <?php } ?>
+
+            
+
+            <!-- order Modal Structure -->
+            <div id="order_modal" class="modal modal-fixed-footer">
+              <div class="modal-content" style="background: white;">
+                <p class="orders_header">My orders</p>
+
+                <div class="row" style="font-weight: 400;">
+                  <div class="col s12 m6">
+                    <div class="card orders_card grey-gradient-left">
+                      <div class="card-content white-text">
+                        <span class="card-title">Cars @ VR DABHAI driving schools</span><br>
+                        <span class="card-title">Rs. 2000</span><br>
+                        <span class="card-title">payment status : <b>pending</b></span>
+                      </div>
+                      <div class="card-action right-align">
+                        <a  style="font-weight: 400;" class="">Cancel order</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col s12 m6">
+                    <div class="card orders_card grey-gradient-left">
+                      <div class="card-content white-text">
+                        <span class="card-title">Cars @ VR DABHAI driving schools</span><br>
+                        <span class="card-title">Rs. 2000</span><br>
+                        <span class="card-title">payment status : <b>pending</b></span>
+                      </div>
+                      <div class="card-action right-align">
+                        <a  style="font-weight: 400;" class="">Cancel order</a>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            
+              </div>
+              <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+              </div>
+            </div>
 
             <footer>
                 <div class="row" style="margin-bottom: 0;">

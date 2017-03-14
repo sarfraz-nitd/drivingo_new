@@ -77,7 +77,7 @@
 		      <td>Cash on delivery</td>
 		      <td>Rs. 3000</td>
 		      <td>12.00.11</td>
-		      <td><input type="button" value="approve" /></td>
+		      <td><input class="btn gradient" type="button" value="approve" /></td>
 		    </tr>
 		    <tr>
 		      <td>2.</td>
@@ -86,7 +86,7 @@
 		      <td>Cash on delivery</td>
 		      <td>Rs. 3000</td>
 		      <td>12.00.11</td>
-		      <td><input type="button" value="approve" /></td>
+		      <td><input class="btn gradient" type="button" value="approve" /></td>
 		    </tr>
 		    <tr>
 		      <td>3.</td>
@@ -95,7 +95,7 @@
 		      <td>Cash on delivery</td>
 		      <td>Rs. 3000</td>
 		      <td>12.00.11</td>
-		      <td><input type="button" value="approve" /></td>
+		      <td><input class="btn gradient" type="button" value="approve" /></td>
 		    </tr>
 		  </table>
 		</div>
